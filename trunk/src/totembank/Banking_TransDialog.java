@@ -11,14 +11,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-public class TransactionDialog extends JDialog{
+public class Banking_TransDialog extends JDialog{
 
 	private static final long serialVersionUID = 5793932589254061192L;
 	private JTextField currentField;
 	private JTextField transField;
 	private JTextField newField;
 
-	public TransactionDialog(){
+	public Banking_TransDialog(){
 		super((JFrame)null,"Transaction");
 		getContentPane().setLayout(null);
 		this.setPreferredSize(new Dimension(600,400));
@@ -69,7 +69,7 @@ public class TransactionDialog extends JDialog{
 		
 		btnW.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
-				String withdraw = JOptionPane.showInputDialog(TransactionDialog.this, "Enter Withdrawal Amount");
+				String withdraw = JOptionPane.showInputDialog(Banking_TransDialog.this, "Enter Withdrawal Amount");
 				if(withdraw !=null){
 					if(!withdraw.matches("[0-9]*.?[0-9]+")){
 						JOptionPane.showMessageDialog(null, "Invalid input!!!");	
@@ -94,7 +94,7 @@ public class TransactionDialog extends JDialog{
 		
 		btnD.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
-				String deposit = JOptionPane.showInputDialog(TransactionDialog.this, "Enter Deposit Amount");
+				String deposit = JOptionPane.showInputDialog(Banking_TransDialog.this, "Enter Deposit Amount");
 				if(!deposit.matches("[0-9]*.?[0-9]+")){
 					JOptionPane.showMessageDialog(null, "Invalid input!!!");	
 				}
@@ -112,7 +112,7 @@ public class TransactionDialog extends JDialog{
 		
 		btnClose.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
-				TransactionDialog.this.setVisible(false);
+				Banking_TransDialog.this.setVisible(false);
 			}
 		});
 	}
