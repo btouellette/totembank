@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JFrame;
 
-public class PwdDialog extends JDialog{
+public class Banking_PwdDialog extends JDialog{
 
 	private static final long serialVersionUID = 8755657995365933230L;
 	
@@ -19,7 +19,7 @@ public class PwdDialog extends JDialog{
 	private JLabel pwdLabel;
 	private Integer currentPin = 0;
 	
-	public PwdDialog(){
+	public Banking_PwdDialog(){
 		super((JFrame)null, "Password Authentication");
 		pwdForm = new JTextField(20);
 		pwdForm.setBounds(141, 34, 146, 20);
@@ -37,7 +37,7 @@ public class PwdDialog extends JDialog{
 					}
 					else{
 						currentPin = Integer.parseInt(text);
-						PwdDialog.this.setVisible(false);
+						Banking_PwdDialog.this.setVisible(false);
 					}
 					
 				}	

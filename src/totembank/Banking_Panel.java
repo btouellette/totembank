@@ -24,8 +24,8 @@ public class Banking_Panel extends JPanel{
 	private JScrollPane userListPane;
 	private JLabel labelOfList;
 	private JButton buttonSelect;
-	private PwdDialog pwdialog;
-	private TransactionDialog tDialog;
+	private Banking_PwdDialog pwdialog;
+	private Banking_TransDialog tDialog;
 	public Banking_Panel(){
 		this.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 		this.setPreferredSize(new Dimension(400,400));
@@ -50,7 +50,7 @@ public class Banking_Panel extends JPanel{
 		
 		//tDialog = new TransactionDialog();
 		
-		pwdialog = new PwdDialog();
+		pwdialog = new Banking_PwdDialog();
 		pwdialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pwdialog.addWindowListener(new WindowAdapter(){
 
@@ -62,7 +62,7 @@ public class Banking_Panel extends JPanel{
 						JOptionPane.showMessageDialog(null, "The entered pin value .does not match!");
 					}
 					else{
-						tDialog = new TransactionDialog();
+						tDialog = new Banking_TransDialog();
 						tDialog.addWindowListener(new WindowAdapter(){
 							public void windowDeactivated(WindowEvent e){
 								//String v = tDialog.getNewField();
