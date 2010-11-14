@@ -26,6 +26,7 @@ public class Banking_Panel extends JPanel{
 	private JButton buttonSelect;
 	private Banking_PwdDialog pwdialog;
 	private Banking_TransDialog tDialog;
+	
 	public Banking_Panel(){
 		this.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 		this.setPreferredSize(new Dimension(400,400));
@@ -47,9 +48,6 @@ public class Banking_Panel extends JPanel{
 		userListPane.setViewportView(userList);
 		userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		
-		//tDialog = new TransactionDialog();
-		
 		pwdialog = new Banking_PwdDialog();
 		pwdialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pwdialog.addWindowListener(new WindowAdapter(){
@@ -57,7 +55,7 @@ public class Banking_Panel extends JPanel{
 			public void windowDeactivated(WindowEvent e){
 				if(pwdialog.getCurrentPin()!=0){
 					Banking_List_Model blm = (Banking_List_Model)userList.getModel();
-					UserPin up = (UserPin)blm.get(userList.getSelectedIndex());
+					UserAccount up = (UserAccount)blm.get(userList.getSelectedIndex());
 					if(up.getUserPin() != pwdialog.getCurrentPin()){
 						JOptionPane.showMessageDialog(null, "The entered pin value .does not match!");
 					}
@@ -65,14 +63,13 @@ public class Banking_Panel extends JPanel{
 						tDialog = new Banking_TransDialog();
 						tDialog.addWindowListener(new WindowAdapter(){
 							public void windowDeactivated(WindowEvent e){
-								//String v = tDialog.getNewField();
 								if(!tDialog.getNewField().equals("")){
-									((Banking_List_Model)userList.getModel()).
-									getBalance().get(userList.getSelectedIndex()).setAmount(Double.valueOf(tDialog.getNewField()));
+									/*((Banking_List_Model)userList.getModel()).
+									get(userList.getSelectedIndex()).setBalance(Double.valueOf(tDialog.getNewField()));*/
 								}	
 							}
 						});
-						tDialog.setCurrentField(blm.getBalance().get(userList.getSelectedIndex()).getAmount());
+						tDialog.setCurrentField(up.getBalance());
 						tDialog.pack();
 						tDialog.setVisible(true); 
 					}

@@ -80,7 +80,9 @@ public class Banking_TransDialog extends JDialog{
 						}
 						else{
 							transField.setText("-" + withdraw);
-							newField.setText(String.valueOf(Double.valueOf(currentField.getText())-Double.valueOf(withdraw)));
+							double newAmount = Double.valueOf(currentField.getText())-Double.valueOf(withdraw);
+							
+							newField.setText(String.valueOf(newAmount));
 							
 							// have to communicate this new balance
 							// multicast newField.gettext by starting a new thread that obtains the lock of process.java an updates client message
