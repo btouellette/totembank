@@ -20,6 +20,8 @@ public class SingleRing {
     int processid;
     int lastseqNum=-1;
     int lastDelivered = 0;
+    int count = 0;
+    int maxRequired = 0;
 
     public SingleRing(int ring, int id){
         queuedMessages = new ArrayList<Message>();
@@ -52,30 +54,36 @@ public class SingleRing {
             for (Message m : receivedMessages){
                 if (m.seqNum== r.seqNum){
                    Process.getInstance().getRing(ring).getBLayer().send(m);
+                   System.out.println("Retransmission of "+m.seqNum);
                 }
             }
         }
     }
     public void request(){
-        int i = maxReceived;
+        int i = Math.max(maxRequired +1, maxReceived+1);
         RetranReq req;
-        while (token.getSeqNum() > maxReceived){
+        while (i<= token.getSeqNum()){
             req = new RetranReq(processid, i);
-            //token.addReq(req);
+            token.addReq(req);
+            System.out.println("Request Retransmission of message "+i);
+            maxRequired = i;
             i++;
         }
     }
 
     public void clearReq(ArrayList<RetranReq> ret){
+        ArrayList<RetranReq> list = new ArrayList<RetranReq>();
         for (RetranReq r : ret){
             if (r.idprocess == processid){
                 for (Message m : receivedMessages){
                     if (m.seqNum == r.seqNum){
-                        ret.remove(r);
+                        list.add(r);
+                        System.out.println("Retransmission request of message " + m.seqNum +" removed");
                     }
                 }
             }
         }
+        ret.removeAll(list);
     }
 
     public void aru(){
@@ -112,6 +120,15 @@ public class SingleRing {
         System.out.println("Message "+m.seqNum+" on ring "+ ring+" delivered");
     }
 
+    private boolean isReceived(Message m){
+        int n = m.seqNum;
+        boolean res = false;
+        for(Message msg : receivedMessages ){
+            res = res || msg.seqNum== n;
+        }
+        return res;
+    }
+
     public void receive (Message m){
 
         if (m instanceof Token ){
@@ -120,14 +137,14 @@ public class SingleRing {
             clearReq(ret);
             retransmit(ret);
             token.setRetranList(ret);
-            //request();
+            request();
             aru();
             deliver();
             lastseqNum = token.getSeqNum();
-            token.checkValues();
+           // token.checkValues();
             send();
             try {
-            Thread.currentThread().sleep(1000);}
+            Thread.currentThread().sleep(2000);}
             catch (InterruptedException e){
                 e.printStackTrace();
             }
@@ -135,11 +152,14 @@ public class SingleRing {
             token = null;
         }
         else{
+            if (processid == 2 && count <= 7){count++;}
+            else if (! isReceived(m)){
             System.out.println("Message "+ m.seqNum+" received");
             receivedMessages.add(m);
             notDeliveredMessages.add(m);
             if (m.seqNum == maxReceived + 1){
                 maxReceived++;
+            }
             }
         }
     }

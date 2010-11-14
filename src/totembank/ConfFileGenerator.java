@@ -15,18 +15,18 @@ public class ConfFileGenerator {
 
     public static void generate(){
     try{
-        System.out.println("Generate Conf File");
+        System.out.println("Generate Conf File for TotemBank");
     System.out.println("Index start ?");
             InputStreamReader reader=new InputStreamReader(System.in);
             BufferedReader entree=new BufferedReader(reader);
             String line=entree.readLine();
             int idstart = Integer.parseInt(line);
-            System.out.println("Nombre de process ?");
+            System.out.println("Number of process ?");
             reader=new InputStreamReader(System.in);
             entree=new BufferedReader(reader);
             line=entree.readLine();
             int n = Integer.parseInt(line);
-            System.out.println("Nombre de rings ?");
+            System.out.println("Number of rings ?");
             reader=new InputStreamReader(System.in);
             entree=new BufferedReader(reader);
             line=entree.readLine();
@@ -47,18 +47,15 @@ public class ConfFileGenerator {
             Pattern p;
             Matcher m;
             for(int i=0; i<n; i++){
-                ring =(int) Math.rint(nring*Math.random());
+                ring =(int) Math.rint((nring-1)*Math.random());
                 ip = InetAddress.getLocalHost().toString();
-                System.out.println(ip);
                 String s = ".*/([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3})";
                 p = Pattern.compile(s);
                 m = p.matcher(ip);
                 if (m.matches()){
-                System.out.println("bou");
                 ip = m.group(1);
                 }
                // ip = m.group();
-                System.out.println(ip);
                 id = idstart+i;
                 port = 8000 + i;
                 output.write(id + " " + ring + " " + ip +" "+ port +"\n");
@@ -72,10 +69,10 @@ public class ConfFileGenerator {
 
 				output.close();
 				//et on le ferme
-				System.out.println("fichier créé");
+				System.out.println("Conf File Generated");
 			}
 			catch(IOException ioe){
-				System.out.print("Erreur : ");
+				System.out.print("Error : ");
 				ioe.printStackTrace();
 				}
 
