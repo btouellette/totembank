@@ -1,51 +1,42 @@
 package totembank;
 
-import java.util.ArrayList;
-
 import javax.swing.DefaultListModel;
 
 public class Banking_List_Model extends DefaultListModel{
 
 	private static final long serialVersionUID = -6927758244571794565L;
 
-	private ArrayList<Balance> balance;
+	//private ArrayList<UserAccount> users;
 	public Banking_List_Model(){
 		initList();
 	}
 	private void initList() {
 		
-		balance = new ArrayList<Balance>();
-		balance.add(new Balance(3.15,new UserPin("Brian",1111)));
-		balance.add(new Balance(31.5,new UserPin("Quentin",2222)));
-		balance.add(new Balance(315,new UserPin("Paul",3333)));
-		balance.add(new Balance(100000,new UserPin("Adith",4444)));
-
-		this.addElement(balance.get(0).getUserPin());
-		this.addElement(balance.get(1).getUserPin());
-		this.addElement(balance.get(2).getUserPin());
-		this.addElement(balance.get(3).getUserPin());		
-		
-	}
-	
-	public ArrayList<Balance> getBalance(){
-		return balance;
+		this.addElement(new UserAccount("Brian",1111,912024775,300));
+		this.addElement(new UserAccount("Quentin",2222,912023225,3000));
+		this.addElement(new UserAccount("Paul",3333,912026789,30000));
+		this.addElement(new UserAccount("Adith",4444,912024110,300000));
 	}
 	
 	public Object getElementAt(int arg0){
-		return ((UserPin)this.get(arg0)).getUserName();
+		return ((UserAccount)this.get(arg0)).getUserName();
 	}
 	
 	
 }
 
-class UserPin{
+class UserAccount{
 	
 	private String userName;
 	private int userPin;
+	private int accntNum;
+	private double balance;
 	
-	public UserPin(String name, int pin){
+	public UserAccount(String name, int pin, int anum, int bal){
 		userName = name;
 		userPin = pin;
+		accntNum = anum;
+		balance = bal;
 	}
 	public String getUserName() {
 		return userName;
@@ -53,31 +44,17 @@ class UserPin{
 	public int getUserPin() {
 		return userPin;
 	}
-	
+	public int getAccountNumber(){
+		return accntNum;
+	}
+	public double getBalance(){
+		return balance;
+	}
+	public void setBalance(double balance){
+		this.balance = balance;
+	}
 	public boolean equals(Object o){
 		return false;
 		
-	}
-}
-
-class Balance{
-	private double amount;
-	private UserPin pin;
-	
-	public Balance(double a, UserPin p){
-		amount = a;
-		pin = p;
-	}
-	
-	public double getAmount(){
-		return amount;
-	}
-	
-	public UserPin getUserPin(){
-		return pin;
-	}
-	
-	public void setAmount(double a){
-		amount = a;
 	}
 }
