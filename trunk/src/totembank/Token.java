@@ -71,13 +71,20 @@ public class Token extends Message{
 	public void setRetranList( ArrayList<RetranReq> retransList ){
 		this.retransList = retransList;
 	}
-	
+	public String retransListToString(){
+            String s = "";
+            for (RetranReq r: retransList){
+                s = s+"("+r.idprocess+", "+ r.seqNum+") ";
+            }
+            return s;
+        }
+
 	public void checkValues(){
 		System.out.println("Ring ID: " + ringID);
 		System.out.println("Time Stamp: " + tStamp);
 		System.out.println("Sequence Number: " + seqNum);
 		System.out.println("ARU: " + aru);
-		System.out.println("Retransmission List: " + retransList);
+		System.out.println("Retransmission List: " + retransListToString());
 	}
 
 

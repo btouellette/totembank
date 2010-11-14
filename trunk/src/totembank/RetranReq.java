@@ -4,12 +4,13 @@
  */
 
 package totembank;
+import java.io.*;
 
 /**
  *
  * @author Quentin
  */
-public class RetranReq {
+public class RetranReq implements Serializable{
             int idprocess;
             int seqNum;
 

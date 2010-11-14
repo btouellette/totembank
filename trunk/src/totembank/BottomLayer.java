@@ -22,10 +22,7 @@ public class BottomLayer extends Thread {
 
     public BottomLayer() {
         nodes = new HashSet<Node>();
-        try {
-            socket = new DatagramSocket(port);
-        } catch (IOException e) {
-        }
+
 
 
     }
@@ -39,6 +36,7 @@ public class BottomLayer extends Thread {
         try {
             socket = new DatagramSocket(port);
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -114,7 +112,6 @@ public class BottomLayer extends Thread {
         Object messagereceived = ois.readObject();
         if (messagereceived instanceof Message){
             Message m = (Message) messagereceived;
-           
             deliver(m);
             
         }
