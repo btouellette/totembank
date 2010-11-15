@@ -11,7 +11,11 @@ import java.io.*;
  * @author Quentin
  */
 public class RetranReq implements Serializable{
-            int idprocess;
+            /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2640957957037913868L;
+			int idprocess;
             int seqNum;
 
             public RetranReq (int id, int num){

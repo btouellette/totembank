@@ -22,9 +22,6 @@ public class BottomLayer extends Thread {
 
     public BottomLayer() {
         nodes = new HashSet<Node>();
-
-
-
     }
 
     void setRing(int ring){
