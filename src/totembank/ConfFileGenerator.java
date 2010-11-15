@@ -83,4 +83,8 @@ public class ConfFileGenerator {
         System.out.println(e.toString());
     }
     }
+    
+    public static void main(String args[]){
+    	generate();    	
+    }
 }

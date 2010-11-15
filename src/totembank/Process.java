@@ -23,6 +23,9 @@ public class Process extends Node {
     static Process getInstance(){
         return instance;
     }
+    
+    Process(){    	//Need to fix (call from gateway.java from constructor)
+    }
 
      Process(int id) {
         super();
@@ -42,7 +45,7 @@ public class Process extends Node {
                 Matcher m = p.matcher(line);
                 if (m.matches() && Integer.parseInt(m.group(1)) == id) {
                     int ring = Integer.parseInt(m.group(2));
-                    Main.test = ring;
+                    //Main.test = ring;
                     loop = false;
                     Ring r = new Ring(ring);
                     addRing(r);
@@ -124,6 +127,9 @@ public class Process extends Node {
                 }
         }
 
+    public static void main( String args[]){
+    	new Process(10);
+    }
 }
 
 
