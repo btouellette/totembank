@@ -1,25 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package totembank;
+
 import java.io.*;
 
 /**
- *
- * @author Quentin
+ * Define a tuple of two integers for a Retransmission Request
  */
-public class RetranReq implements Serializable{
-            /**
-	 * 
-	 */
-	private static final long serialVersionUID = -2640957957037913868L;
-			int idprocess;
-            int seqNum;
+public class RetranReq implements Serializable {
 
-            public RetranReq (int id, int num){
-                idprocess = id;
-                seqNum = num;
-            }
+    private static final long serialVersionUID = -2640957957037913868L;
+    /** Id of the process requesting the retransmission*/
+    int idprocess;
+    /** Sequence Number requested */
+    int seqNum;
+
+    public RetranReq(int id, int num) {
+        idprocess = id;
+        seqNum = num;
+    }
 }
