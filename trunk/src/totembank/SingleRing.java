@@ -29,6 +29,10 @@ public class SingleRing {
     int count = 0;
     /** Last sequence number required*/
     int maxRequired = 0;
+    /** Last token is store in case of node failure */
+    Token oldtoken =null;
+    /** Maximum number of messages to be sent when the node has the token*/
+    int MaxMessagestoSend = 20;
 
     /**Constructor. Set ring id and process id and creates empty lists
     @param ring Ring ID
@@ -53,14 +57,22 @@ public class SingleRing {
 
     /** Send all messages queued. Call when the process handles the token*/
     private void send() {
+        int sendcount =0;
+        List<Message> temp = new ArrayList<Message>();
         if (token != null) {
             for (Message m : queuedMessages) {
                 token.incSeqNum();
                 m.seqNum = token.getSeqNum();
                 m.tStamp = System.currentTimeMillis();
                 Process.getInstance().getRing(ring).getBLayer().send(m);
+                temp.add(m);
+                sendcount++;
+                if (sendcount < MaxMessagestoSend){
+
+                    break;
+                }
             }
-            queuedMessages.clear();
+            queuedMessages.removeAll(temp);
         }
     }
 
@@ -189,6 +201,8 @@ public class SingleRing {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            token.setTimeStamp();
+            oldtoken = token;
             Process.getInstance().getRing(ring).getBLayer().sendToken(token, processid);
             token = null;
         } else {
