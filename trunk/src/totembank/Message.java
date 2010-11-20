@@ -5,7 +5,7 @@ import java.io.*;
 /** This class defines messages. Messages can be standard message or token or Gateway Messages.
  * Messages has to be serializable to be sent.
  */
-public class Message implements Serializable {
+public class Message implements Serializable, Cloneable {
 
     /** Used for serialization*/
     private static final long serialVersionUID = 154634656545456L;
@@ -20,11 +20,23 @@ public class Message implements Serializable {
     public int getRingID() {
         return ringID;
     }
+    
+    public Message() {
+        tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
+    }
 
     /** Constructor
     @param ring id of the origin ring*/
     public Message(int ring) {
         ringID = ring;
         tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
+    }
+    
+    protected Message clone() {
+    	Message copy = new Message();
+    	copy.ringID = ringID;
+    	copy.seqNum = seqNum;
+    	copy.tStamp = tStamp;
+    	return copy;
     }
 }

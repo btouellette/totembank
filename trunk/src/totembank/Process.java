@@ -32,6 +32,7 @@ public class Process extends Node {
     Process(int id) {
         super();
         this.id = id;
+        //TODO populate MultipleRing.receivedMessages to have an empty list for every ring in the network 
         String file = "totem.conf"; // address of the configuation file
 
         try {
@@ -152,10 +153,6 @@ public class Process extends Node {
         }
     }
 
-    public static void main(String args[]) {
-        new Process(10);
-    }
-
 	public long timeOffset() {
 		return timeOffset;
 	}
@@ -163,6 +160,10 @@ public class Process extends Node {
 	public void increaseTimeOffset(long increase) {
 		timeOffset += increase;
 	}
+
+    public static void main(String args[]) {
+        new Process(10);
+    }
 }
 
 
