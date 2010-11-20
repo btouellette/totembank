@@ -63,7 +63,7 @@ public class SingleRing {
             for (Message m : queuedMessages) {
                 token.incSeqNum();
                 m.seqNum = token.getSeqNum();
-                m.tStamp = System.currentTimeMillis();
+                m.tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
                 Process.getInstance().getRing(ring).getBLayer().send(m);
                 temp.add(m);
                 sendcount++;
@@ -154,7 +154,8 @@ public class SingleRing {
     /** Deliver message to the upper layer
     @param m Message to be delivered*/
     private void deliver(Message m) { //TO DO here is just test implementation
-        System.out.println("Message " + m.seqNum + " on ring " + ring + " delivered");
+    	MultipleRing.receive(m);
+        System.out.println("Message " + m.seqNum + " on ring " + ring + " delivered to multiring");
     }
 
     /** Check if a message has already been received
@@ -170,7 +171,7 @@ public class SingleRing {
     }
 
     /** Called when a message is received
-     * If this message is a token, perfoms the following actions in sequence :
+     * If this message is a token, performs the following actions in sequence :
      * Clear the retransmission List of messages no more requested
      * Retransmit messages requested
      * Request messages not received
@@ -183,10 +184,14 @@ public class SingleRing {
      * @param m Message received
      */
     public void receive(Message m) {
-
+    	// Update our lamport clock if necessary
+    	long currentTime = System.currentTimeMillis() + Process.getInstance().timeOffset();
+    	if (m.tStamp > currentTime) {
+    		Process.getInstance().increaseTimeOffset(m.tStamp - currentTime + 1);
+    	}
         if (m instanceof Token) {
             token = (Token) m;
-            ArrayList ret = token.getRetranList();
+            ArrayList<RetranReq> ret = token.getRetranList();
             clearReq(ret);
             retransmit(ret);
             token.setRetranList(ret);
@@ -197,7 +202,7 @@ public class SingleRing {
             // token.checkValues();
             send();
             try {
-                Thread.currentThread().sleep(2000);
+				Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

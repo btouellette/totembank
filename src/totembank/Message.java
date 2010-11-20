@@ -25,8 +25,6 @@ public class Message implements Serializable {
     @param ring id of the origin ring*/
     public Message(int ring) {
         ringID = ring;
-        tStamp = System.currentTimeMillis();
-
-
+        tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
     }
 }
