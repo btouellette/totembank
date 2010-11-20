@@ -16,7 +16,9 @@ public class Process extends Node {
     private HashMap<Integer, Ring> rings = new HashMap<Integer, Ring>();
     /** Instance of the process to guarantee the singleton*/
     static private Process instance;
-
+    // Lamport clock offset amount
+    private long timeOffset = 0;
+    
     /** @return Return this process*/
     static Process getInstance() {
         return instance;
@@ -96,6 +98,10 @@ public class Process extends Node {
     private void addRing(Ring r) {
         rings.put(r.ringID, r);
     }
+    
+    HashMap<Integer, Ring> getRings() {
+    	return rings;
+    }
 
     /** @return Return the id of the process*/
     int getId() {
@@ -149,6 +155,14 @@ public class Process extends Node {
     public static void main(String args[]) {
         new Process(10);
     }
+
+	public long timeOffset() {
+		return timeOffset;
+	}
+
+	public void increaseTimeOffset(long increase) {
+		timeOffset += increase;
+	}
 }
 
 

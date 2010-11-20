@@ -23,7 +23,7 @@ public class Token extends Message{
 	public Token(int ring){
 		super(ring);
         ringID = ring;
-		tStamp = System.currentTimeMillis();
+		tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
 		seqNum = 0;
 		//aru = new ArrayList<RetranReq>();
 		aru = 0;
@@ -39,7 +39,7 @@ public class Token extends Message{
 	}
 	
 	public void setTimeStamp(){
-		tStamp = System.currentTimeMillis();
+		tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
 	}
 	
 	public int getSeqNum(){
