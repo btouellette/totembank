@@ -46,10 +46,20 @@ public class Bank {
 	}
 	
 	public boolean isValidLogin(Login log){
-		if(users.contains(log)){
-			return true;
+		for(Login login : users) {
+			if(login.equals(log)){
+				return true;
+			}
 		}
 		return false;
+	}
+	/*Encryption scheme */
+	public void sendTransaction(){
+		//MultipleRing.send(sendString);
+	}
+	
+	public void deliver(String m){
+		
 	}
 	
 }
@@ -65,11 +75,9 @@ class Login{
 		this.setPin(pin);
 	}
 
-	public boolean equals(Object o){
-		if(o instanceof Login){
-			if(((Login)o).username.equals(username) && ((Login)o).password.equals(password)){
+	public boolean equals(Login o){
+		if(o.username.equals(this.username) && o.password.equals(this.password)){
 				return true;
-			}
 		}
 		return false;
 	}
@@ -97,6 +105,8 @@ class Login{
 	public int getPin() {
 		return pin;
 	}
+
+	
 }
 
 class Account{
@@ -121,9 +131,5 @@ class Account{
 	}
 	public void setBalance(double balance){
 		this.balance = balance;
-	}
-	public boolean equals(Object o){
-		return false;
-		
 	}
 }
