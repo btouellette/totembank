@@ -7,12 +7,8 @@ import java.util.List;
 import totembank.Process.Ring;
 
 public class MultipleRing {
-	private static HashMap<Integer, List<Message>> receivedMessages;
+	private static HashMap<Integer, List<Message>> receivedMessages = new HashMap<Integer, List<Message>>();
 
-	static void instantiateList(){
-		receivedMessages = new HashMap<Integer, List<Message>>();
-	}
-	
 	static void addRingID(Integer ringID){
 		receivedMessages.put(ringID, new ArrayList<Message>());
 	}
