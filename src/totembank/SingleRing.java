@@ -50,7 +50,7 @@ public class SingleRing {
     /** Add a message to queue of message. Called by upper layer
     @param m Message to be sent*/
     public void send(Message m) {
-        m.ringID = ring;
+        m.ringIDs.add(ring);
         queuedMessages.add(m);
         System.out.println("Message queued");
     }
