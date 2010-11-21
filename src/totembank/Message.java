@@ -17,6 +17,7 @@ public class Message implements Serializable, Cloneable {
     int seqNum = -1;
     /** Timestamp*/
     long tStamp;
+    String message;
     
     public Message() {
         tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
@@ -35,6 +36,7 @@ public class Message implements Serializable, Cloneable {
     	copy.ringID = copy.ringID;
     	copy.seqNum = seqNum;
     	copy.tStamp = tStamp;
+    	copy.message = message;
     	return copy;
     }
 }
