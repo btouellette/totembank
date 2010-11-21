@@ -12,6 +12,7 @@ public class MultipleRing {
 	static void addRingID(Integer ringID){
 		receivedMessages.put(ringID, new ArrayList<Message>());
 	}
+	
 	// Getting a message from the single ring protocol
     static void receive(Message m) {
     	// Forward to other rings
@@ -22,7 +23,7 @@ public class MultipleRing {
     		}
     	}
     	// Add it to the proper list in receivedMessages
-    	receivedMessages.get(m.ringID).add(m);
+    	receivedMessages.get(m.ringIDOrigin).add(m);
     }
     
     // Check whether we can deliver any messages on to the application
@@ -50,6 +51,6 @@ public class MultipleRing {
     // Send the message to the application
     static void deliver(Message m) {
     	//TODO: get with Adith to figure out how he wants this
-        System.out.println("Message " + m.seqNum + " on ring " + m.ringID + " delivered to application");
+        System.out.println("Message " + m.seqNum + " on ring " + m.ringIDOrigin + " delivered to application");
     }
 }

@@ -57,7 +57,7 @@ public class SingleRing {
 
     /** Send all messages queued. Call when the process handles the token*/
     private void send() {
-        int sendcount =0;
+        int sendcount = 0;
         List<Message> temp = new ArrayList<Message>();
         if (token != null) {
             for (Message m : queuedMessages) {
