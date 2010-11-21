@@ -17,6 +17,7 @@ public class MultipleRing {
 		HashMap<Integer, Ring> processRings = Process.getInstance().getRings();
 		Message msg = new Message();
 		msg.ringIDOrigin = processRings.keySet().iterator().next();
+		msg.message = sendString;
     	for(Integer ringID : processRings.keySet()) {
     		msg.ringID = ringID;
 			processRings.get(ringID).getSingleRing().send(msg.clone());
