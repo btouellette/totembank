@@ -61,7 +61,7 @@ public class MultipleRing {
 
     // Send the message to the application
     static void deliver(Message m) {
-    	//TODO: get with Adith to figure out how he wants this
+    	Bank.getInstance().deliver(m.message);
         System.out.println("Message " + m.seqNum + " on ring " + m.ringIDOrigin + " delivered to application");
     }
 }
