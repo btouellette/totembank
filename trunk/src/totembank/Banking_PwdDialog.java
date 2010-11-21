@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Banking_PwdDialog extends JDialog{
 
@@ -31,6 +33,23 @@ public class Banking_PwdDialog extends JDialog{
 		pwdLabel = new JLabel("Enter your 4 digit pin below");
 		pwdLabel.setBounds(141, 11, 162, 14);
 		this.getContentPane().add(pwdLabel);
+		
+		JButton btnNum0 = new JButton("0");
+		btnNum0.setBounds(169, 262, 59, 51);
+		getContentPane().add(btnNum0);
+		btnNum0.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				String text;
+				text = String.valueOf(Banking_PwdDialog.this.pwdForm.getPassword());
+				if(text==null){
+					Banking_PwdDialog.this.pwdForm.setText("0");
+				}
+				else{
+					Banking_PwdDialog.this.pwdForm.setText(text+"0");
+				}
+				
+			}
+		});
 		
 		JButton btnNum1 = new JButton("1");
 		btnNum1.setBounds(100, 76, 59, 51);
@@ -195,8 +214,7 @@ public class Banking_PwdDialog extends JDialog{
 					}
 					else{
 						currentPin = Integer.parseInt(text);
-						//Bank.getInstance().
-						//Banking_PwdDialog.this.setVisible(false);
+						
 					}	
 				}			
 			}
@@ -214,6 +232,8 @@ public class Banking_PwdDialog extends JDialog{
 		JButton btnBack = new JButton("<------");
 		btnBack.setBounds(335, 76, 89, 51);
 		getContentPane().add(btnBack);
+		
+		
 		btnBack.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
 				String text;
