@@ -33,8 +33,7 @@ public class Process extends Node {
     Process(int id) {
         super();
         this.id = id;
-        //TODO populate MultipleRing.receivedMessages to have an empty list for every ring in the network 
-        String file = "totem.conf"; // address of the configuation file
+        String file = "totem.conf"; // address of the configuration file
 
         try {
             instance = this;
@@ -49,6 +48,7 @@ public class Process extends Node {
             while ((line = br.readLine()) != null && loop) {
                 Pattern p = Pattern.compile("^([0-9]+) ([0-9]+) ([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}) ([0-9]+)$"); //regex for a line in the conf file [idprocess ringid IpAddress port]
                 Matcher m = p.matcher(line);
+                MultipleRing.addRingID(Integer.parseInt(m.group(2)));
                 if (m.matches() && Integer.parseInt(m.group(1)) == id) {
                     int ring = Integer.parseInt(m.group(2));
                     Main.test = ring;	// used for test purposes currently.....
@@ -64,10 +64,7 @@ public class Process extends Node {
                     SingleRing s = new SingleRing(ring, id); //Create the Single Ring Layer
                     r.setSingleRing(s);
                     r.setBottomLayer(b);
-                    MultipleRing.instantiateList();	// create list for the multiple ring protocol
-                    MultipleRing.addRingID(ring);
                     b.start();
-                    
                 }
             }
             if (loop) {
