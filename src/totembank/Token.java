@@ -10,10 +10,9 @@ public class Token extends Message{
 	 */
 	private static final long serialVersionUID = 1L;
 	public int ringID;			//ring identifier
-	public long tStamp;		//time stamp
+	public long tStamp;			//time stamp
 	public int seqNum;			//sequence number
-	//public ArrayList<RetranReq> aru;			//all received up to field
-	public int aru;
+	public int aru;				// all received up to field
 	public ArrayList<RetranReq> retransList;	//retransmission list
 	
 	public Token(){
@@ -25,7 +24,6 @@ public class Token extends Message{
         ringID = ring;
 		tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
 		seqNum = 0;
-		//aru = new ArrayList<RetranReq>();
 		aru = 0;
 		retransList = new ArrayList<RetranReq>();
 	}
@@ -54,17 +52,9 @@ public class Token extends Message{
 		this.seqNum = seqNum;
 	}
 	
-	//public ArrayList<RetranReq> getAru(){
-	//	return aru;
-	//}
-	
 	public int getAru(){
 		return aru;
 	}
-	
-//	public void setAru( ArrayList<RetranReq> aru ){
-//		this.aru = aru;
-//	}
 	
 	public void setAru( int aru){
 		this.aru = aru;
@@ -95,5 +85,4 @@ public class Token extends Message{
 		System.out.println("ARU: " + aru);
 		System.out.println("Retransmission List: " + retransListToString());
 	}
-
 }
