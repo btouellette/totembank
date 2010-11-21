@@ -16,25 +16,23 @@ public class MultipleRing {
 	static void send(String sendString) {
 		HashMap<Integer, Ring> processRings = Process.getInstance().getRings();
 		Message msg = new Message();
-		msg.ringIDOrigin = processRings.keySet().iterator().next();
+		int ringID = processRings.keySet().iterator().next();
+		msg.ringIDs.add(ringID);
 		msg.message = sendString;
-    	for(Integer ringID : processRings.keySet()) {
-    		msg.ringID = ringID;
-			processRings.get(ringID).getSingleRing().send(msg.clone());
-    	}
-	}
+		processRings.get(ringID).getSingleRing().send(msg);
+    }
 	
 	// Getting a message from the single ring protocol
     static void receive(Message m) {
     	// Forward to other rings
     	HashMap<Integer, Ring> processRings = Process.getInstance().getRings();
     	for(Integer ringID : processRings.keySet()) {
-    		if(ringID != m.ringID) {
+    		if(!m.ringIDs.contains(ringID)) {
     			processRings.get(ringID).getSingleRing().send(m.clone());
     		}
     	}
     	// Add it to the proper list in receivedMessages
-    	receivedMessages.get(m.ringIDOrigin).add(m);
+    	receivedMessages.get(m.ringIDs.get(0)).add(m);
     }
     
     // Check whether we can deliver any messages on to the application
@@ -62,6 +60,6 @@ public class MultipleRing {
     // Send the message to the application
     static void deliver(Message m) {
     	Bank.getInstance().deliver(m.message);
-        System.out.println("Message " + m.seqNum + " on ring " + m.ringIDOrigin + " delivered to application");
+        System.out.println("Message " + m.seqNum + " on ring " + m.ringIDs.get(0) + " delivered to application");
     }
 }
