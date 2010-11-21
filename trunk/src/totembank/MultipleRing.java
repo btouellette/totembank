@@ -1,5 +1,6 @@
 package totembank;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,6 +9,13 @@ import totembank.Process.Ring;
 public class MultipleRing {
 	private static HashMap<Integer, List<Message>> receivedMessages;
 
+	static void instantiateList(){
+		receivedMessages = new HashMap<Integer, List<Message>>();
+	}
+	
+	static void addRingID(Integer ringID){
+		receivedMessages.put(ringID, new ArrayList<Message>());
+	}
 	// Getting a message from the single ring protocol
     static void receive(Message m) {
     	// Forward to other rings

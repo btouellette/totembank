@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Process extends Node {
 
-    /** List of rings where the node is present. A single element for no-gateway processes*/
+    /** List of rings associated with node. A single element for no-gateway nodes*/
     private HashMap<Integer, Ring> rings = new HashMap<Integer, Ring>();
     /** Instance of the process to guarantee the singleton*/
     static private Process instance;
@@ -23,9 +23,10 @@ public class Process extends Node {
     static Process getInstance() {
         return instance;
     }
-
-    Process() {    	//Need to fix (call from gateway.java from constructor)
+    Process(){
+    	
     }
+    
 
     /** Process creation and initialization by reading the configuration file
     @param id Id assigned to this process*/
@@ -42,11 +43,15 @@ public class Process extends Node {
             BufferedReader br = new BufferedReader(ipsr);
             String line;
             boolean loop = true;
+            /* Note: this while loop needs to check for multiple rings in case node is a gateway. Right now it doesn't which means we need to modify
+             * configuration file to accommodate for it
+             */
             while ((line = br.readLine()) != null && loop) {
                 Pattern p = Pattern.compile("^([0-9]+) ([0-9]+) ([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}) ([0-9]+)$"); //regex for a line in the conf file [idprocess ringid IpAddress port]
                 Matcher m = p.matcher(line);
                 if (m.matches() && Integer.parseInt(m.group(1)) == id) {
                     int ring = Integer.parseInt(m.group(2));
+                    Main.test = ring;	// used for test purposes currently.....
                     loop = false;
                     Ring r = new Ring(ring); // Creates the ring associated
                     addRing(r);
@@ -54,18 +59,22 @@ public class Process extends Node {
                     b.setPort(Integer.parseInt(m.group(4)));
                     InetAddress ipnode = InetAddress.getByName(m.group(3));
                     Node n = new Node(ipnode, Integer.parseInt(m.group(4)), Integer.parseInt(m.group(1)));
-                    SingleRing s = new SingleRing(ring, id); //Create the Single Ring Layer
-                    r.setSingleRing(s);
                     b.addNode(n);
                     b.setRing(ring);
+                    SingleRing s = new SingleRing(ring, id); //Create the Single Ring Layer
+                    r.setSingleRing(s);
                     r.setBottomLayer(b);
+                    MultipleRing.instantiateList();	// create list for the multiple ring protocol
+                    MultipleRing.addRingID(ring);
                     b.start();
+                    
                 }
             }
             if (loop) {
                 //Id not found
                 System.out.println("id not found in the configuration file");
-            } else {
+            } 
+            else {
                 ips = new FileInputStream(file);
                 ipsr = new InputStreamReader(ips);
                 br = new BufferedReader(ipsr);
@@ -130,7 +139,7 @@ public class Process extends Node {
         @param b Bottom Layer to be attached*/
         void setBottomLayer(BottomLayer b) {
             bLayer = b;
-        }
+    }
 
         /** Attach a Single Ring Layer to this ring
         @param s Single Ring Layer to be attached*/
@@ -160,10 +169,6 @@ public class Process extends Node {
 	public void increaseTimeOffset(long increase) {
 		timeOffset += increase;
 	}
-
-    public static void main(String args[]) {
-        new Process(10);
-    }
 }
 
 
