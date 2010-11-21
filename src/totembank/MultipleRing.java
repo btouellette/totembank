@@ -13,6 +13,16 @@ public class MultipleRing {
 		receivedMessages.put(ringID, new ArrayList<Message>());
 	}
 	
+	static void send(String sendString) {
+		HashMap<Integer, Ring> processRings = Process.getInstance().getRings();
+		Message msg = new Message();
+		msg.ringIDOrigin = processRings.keySet().iterator().next();
+    	for(Integer ringID : processRings.keySet()) {
+    		msg.ringID = ringID;
+			processRings.get(ringID).getSingleRing().send(msg.clone());
+    	}
+	}
+	
 	// Getting a message from the single ring protocol
     static void receive(Message m) {
     	// Forward to other rings
