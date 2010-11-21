@@ -3,97 +3,79 @@ package totembank;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.JButton;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.WindowConstants;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
+import javax.swing.JButton;
 
 public class Banking_Panel extends JPanel{
-
-	private static final long serialVersionUID = 6570309247216454426L;
-
-	private JList userList;
-	private JScrollPane userListPane;
-	private JLabel labelOfList;
-	private JButton buttonSelect;
-	private Banking_PwdDialog pwdialog;
-	private Banking_TransDialog tDialog;
 	
-	public Banking_Panel(){
-		this.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-		this.setPreferredSize(new Dimension(400,400));
+	public Banking_Panel() {
+		setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+		this.setPreferredSize(new Dimension(700,300));
 		setLayout(null);
-		addBankingComponents();
-	}
-	private void addBankingComponents() {
 		
+		JLabel lblUserName = new JLabel("Please Enter Your Username :");
+		lblUserName.setBounds(10, 100, 229, 23);
+		add(lblUserName);
 		
-		labelOfList = new JLabel("Current users in system");
-		labelOfList.setBounds(12, 11, 446, 14);
-		this.add(labelOfList);
+		textField = new JTextField();
+		textField.setBounds(249, 101, 157, 20);
+		add(textField);
+		textField.setColumns(10);
+		textField.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent a){
+				
+			}
+		});
 		
-		userListPane = new JScrollPane();
-		userListPane.setBounds(12, 27, 56, 91);
-		this.add(userListPane);
+		JLabel lblPwd = new JLabel("Please Enter Your Password :");
+		lblPwd.setBounds(10, 149, 229, 23);
+		add(lblPwd);
 		
-		userList = new JList(new Banking_List_Model());
-		userListPane.setViewportView(userList);
-		userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		passwordField = new JPasswordField();
+		passwordField.setBounds(249, 150, 157, 20);
+		add(passwordField);
 		
-		pwdialog = new Banking_PwdDialog();
-		pwdialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		pwdialog.addWindowListener(new WindowAdapter(){
-
-			public void windowDeactivated(WindowEvent e){
-				if(pwdialog.getCurrentPin()!=0){
-					Banking_List_Model blm = (Banking_List_Model)userList.getModel();
-					UserAccount up = (UserAccount)blm.get(userList.getSelectedIndex());
-					if(up.getUserPin() != pwdialog.getCurrentPin()){
-						JOptionPane.showMessageDialog(null, "The entered pin value .does not match!");
-					}
-					else{
-						tDialog = new Banking_TransDialog();
-						tDialog.addWindowListener(new WindowAdapter(){
-							public void windowDeactivated(WindowEvent e){
-								if(!tDialog.getNewField().equals("")){
-									/*((Banking_List_Model)userList.getModel()).
-									get(userList.getSelectedIndex()).setBalance(Double.valueOf(tDialog.getNewField()));*/
-								}	
-							}
-						});
-						tDialog.setCurrentField(up.getBalance());
-						tDialog.pack();
-						tDialog.setVisible(true); 
-					}
-					pwdialog.resetCurrentPin();
+		JButton btnLogin = new JButton("Login");
+		btnLogin.setBounds(261, 181, 89, 23);
+		add(btnLogin);
+		btnLogin.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				boolean isValid = Bank.getInstance().isValidLogin(new Login(textField.getText(),String.valueOf(passwordField.getPassword()),-1));
+				if(!isValid){
+					JOptionPane.showMessageDialog(null, "Invalid username/password combo! Login Failed.");
+				}
+				else{
+					Banking_Panel.this.setVisible(false);
 					
 				}
 				
-			 }
-		});
-		
-		buttonSelect = new JButton("Select this user");
-		buttonSelect.setBounds(10, 129, 127, 23);
-		buttonSelect.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				if(!userList.isSelectionEmpty()){
-					pwdialog.pack();
-					pwdialog.setVisible(true);
-				}
-				else{
-					JOptionPane.showMessageDialog(null, "No user selected!!");
-				}
 			}
 		});
-		this.add(buttonSelect);	
+		
+		JLabel lblWelcomeToTotem = new JLabel("WELCOME TO TOTEM BANK OF GEORGIA TECH");
+		lblWelcomeToTotem.setBounds(58, 11, 292, 14);
+		add(lblWelcomeToTotem);
+		
+		JLabel img_label = new JLabel(new ImageIcon("totem.jpg"));
+		img_label.setBounds(416, 11, 238, 252);
+		add(img_label);
+		
+		Banking_PwdDialog bpdialog = new Banking_PwdDialog();
+		
 	}
 	
+	
+
+	private static final long serialVersionUID = 6570309247216454426L;
+	private JTextField textField;
+	private JPasswordField passwordField;
 }

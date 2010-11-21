@@ -195,7 +195,8 @@ public class Banking_PwdDialog extends JDialog{
 					}
 					else{
 						currentPin = Integer.parseInt(text);
-						Banking_PwdDialog.this.setVisible(false);
+						//Bank.getInstance().
+						//Banking_PwdDialog.this.setVisible(false);
 					}	
 				}			
 			}

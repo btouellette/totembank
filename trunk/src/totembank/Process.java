@@ -45,14 +45,14 @@ public class Process extends Node {
             /* Note: this while loop needs to check for multiple rings in case node is a gateway. Right now it doesn't which means we need to modify
              * configuration file to accommodate for it
              */
-            while ((line = br.readLine()) != null && loop) {
+            while ((line = br.readLine()) != null){ //&& loop) {
                 Pattern p = Pattern.compile("^([0-9]+) ([0-9]+) ([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}) ([0-9]+)$"); //regex for a line in the conf file [idprocess ringid IpAddress port]
                 Matcher m = p.matcher(line);
                 MultipleRing.addRingID(Integer.parseInt(m.group(2)));
                 if (m.matches() && Integer.parseInt(m.group(1)) == id) {
                     int ring = Integer.parseInt(m.group(2));
                     Main.test = ring;	// used for test purposes currently.....
-                    loop = false;
+                    //loop = false;
                     Ring r = new Ring(ring); // Creates the ring associated
                     addRing(r);
                     BottomLayer b = new BottomLayer(); //Creates the BottomLayer
