@@ -59,7 +59,21 @@ public class MultipleRing {
 
     // Send the message to the application
     static void deliver(Message m) {
+    	if(m.message.equals("GV")) {
+    		System.out.println("GV " + m.seqNum + " on ring " + m.ringIDs.get(0) + " delivered to application");
+    	    return;
+    	}
     	Bank.getInstance().deliver(m.message);
         System.out.println("Message " + m.seqNum + " on ring " + m.ringIDs.get(0) + " delivered to application");
     }
+    
+    static int GVcount = 0;
+	static void guaranteeVector() {
+		if(GVcount == 9) {
+			send("GV");
+			GVcount = 0;
+		} else {
+			GVcount++;
+		}
+	}
 }
