@@ -190,6 +190,12 @@ public class SingleRing {
     		Process.getInstance().increaseTimeOffset(m.tStamp - currentTime + 1);
     	}
         if (m instanceof Token) {
+        	MultipleRing.deliver();
+            try {
+				Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             token = (Token) m;
             ArrayList<RetranReq> ret = token.getRetranList();
             clearReq(ret);
@@ -202,7 +208,7 @@ public class SingleRing {
             // token.checkValues();
             send();
             try {
-				Thread.sleep(2000);
+				Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
