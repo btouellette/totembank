@@ -28,10 +28,10 @@ public class Bank {
 		initAccounts();
 		initLogin();
 		try {
-			// This key must be 8 bytes
-			SecretKey key = new SecretKeySpec("14835925".getBytes(), "DES");
-            ecipher = Cipher.getInstance("DES");
-            dcipher = Cipher.getInstance("DES");
+			// This key must be 16 bytes
+			SecretKey key = new SecretKeySpec("eS^@M?DV1,!3'gyu".getBytes(), "AES");
+            ecipher = Cipher.getInstance("AES");
+            dcipher = Cipher.getInstance("AES");
             ecipher.init(Cipher.ENCRYPT_MODE, key);
             dcipher.init(Cipher.DECRYPT_MODE, key);
         } catch (javax.crypto.NoSuchPaddingException e) {
