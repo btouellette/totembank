@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -13,10 +15,11 @@ import javax.crypto.spec.SecretKeySpec;
 public class Bank {
 
 	private static HashMap<Integer,Account> accounts;
-	private static HashSet<Login> users;
+	private static HashSet<Login> users;	
+	private static Bank instance;
 	
-	static private Bank instance;
-
+	public boolean hasCompletedTransaction;
+	
     Cipher ecipher;
     Cipher dcipher;
 	
@@ -77,6 +80,13 @@ public class Bank {
 		}
 		return false;
 	}
+	
+	public boolean isValidPin(int pin){
+		if(accounts.containsKey(pin)){
+			return true;
+		}
+		return false;
+	}
 	/*Encryption scheme */
     public String encrypt(String str) {
         try {
@@ -109,16 +119,36 @@ public class Bank {
         return null;
     }
     
-	public void sendTransaction(){
-		//TODO: Set this
-		String sendString = "";
+	public void sendTransaction(int pin, String withdraw){
+		hasCompletedTransaction = false;
+		String sendString = String.valueOf(accounts.get(pin).getAccountNumber())+" "+ withdraw;
 		MultipleRing.send(encrypt(sendString));
 	}
 	
-	public void deliver(String m){
-		String message = decrypt(m);
+	public void deliver(String key){
+		String message = decrypt(key);
+		Pattern p = Pattern.compile("([0-9]*) (-?[0-9]*.?[0-9]+)");
+		Matcher m = p.matcher(message);
+		if(m.matches()){
+			int acntNum = Integer.valueOf(m.group(1));
+			double amount = Double.valueOf(m.group(2));
+			
+			for(Account a: accounts.values()){
+				if(a.getAccountNumber()==acntNum){
+					a.setBalance(a.getBalance()+amount);
+					hasCompletedTransaction = true;
+					break;
+				}
+			}
+		}
+		else{
+			System.out.println("Something went wrong....");
+		}
 	}
 	
+	public HashMap<Integer,Account> getAccountList(){
+		return accounts;
+	}
 }
 
 class Login{

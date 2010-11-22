@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.SwingWorker;
 
 public class Banking_TransDialog extends JDialog{
 
@@ -17,11 +18,14 @@ public class Banking_TransDialog extends JDialog{
 	private JTextField currentField;
 	private JTextField transField;
 	private JTextField newField;
+	private int currentPin;
+	private boolean oldTransaction = false;
 
-	public Banking_TransDialog(){
+	public Banking_TransDialog(int pin){
 		super((JFrame)null,"Transaction");
+		currentPin = pin;
 		getContentPane().setLayout(null);
-		this.setPreferredSize(new Dimension(600,400));
+		this.setMinimumSize(new Dimension(600,400));
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setModalityType(DEFAULT_MODALITY_TYPE);
 		
@@ -34,6 +38,7 @@ public class Banking_TransDialog extends JDialog{
 		getContentPane().add(currentField);
 		currentField.setColumns(10);
 		currentField.setEditable(false);
+		currentField.setText(String.valueOf(Bank.getInstance().getAccountList().get(currentPin).getBalance()));
 		
 		JLabel lblTransactionAmount = new JLabel("TRANSACTION AMOUNT");
 		lblTransactionAmount.setBounds(10, 45, 152, 14);
@@ -69,24 +74,50 @@ public class Banking_TransDialog extends JDialog{
 		
 		btnW.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
-				String withdraw = JOptionPane.showInputDialog(Banking_TransDialog.this, "Enter Withdrawal Amount");
+				if(oldTransaction){
+					currentField.setText(String.valueOf(Bank.getInstance().getAccountList().get(currentPin).getBalance()));
+					transField.setText(null);
+				}
+				final String withdraw = JOptionPane.showInputDialog(Banking_TransDialog.this, "Enter Withdrawal Amount");
 				if(withdraw !=null){
 					if(!withdraw.matches("[0-9]*.?[0-9]+")){
 						JOptionPane.showMessageDialog(null, "Invalid input!!!");	
 					}
 					else{
+						if(Double.valueOf(withdraw)<0){
+							JOptionPane.showMessageDialog(null, "Amount cannot be negative.");
+						}
 						if(Double.valueOf(withdraw)>Double.valueOf(currentField.getText())){
 							JOptionPane.showMessageDialog(null, "Withdrawal amount higher than balance.");
 						}
 						else{
 							transField.setText("-" + withdraw);
-							double newAmount = Double.valueOf(currentField.getText())-Double.valueOf(withdraw);
-							
-							newField.setText(String.valueOf(newAmount));
-							
-							// have to communicate this new balance
-							// multicast newField.gettext by starting a new thread that obtains the lock of process.java an updates client message
-							// have another thread that is listening for incoming messages from process.java
+							oldTransaction = true;
+							SwingWorker<String,Integer> worker = new SwingWorker<String,Integer>(){
+								JDialog waitForTrans;
+								protected String doInBackground() throws Exception {
+									Bank.getInstance().sendTransaction(Bank.getInstance().
+											getAccountList().get(currentPin).getAccountNumber(),withdraw);
+									
+									waitForTrans = new JDialog((JFrame)null,true);
+									waitForTrans.add(new JLabel("Updating balance in system. Please Wait..."));
+									waitForTrans.setMinimumSize(new Dimension(100,100));
+									waitForTrans.setVisible(true);
+									waitForTrans.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+									
+									while(!Bank.getInstance().hasCompletedTransaction){
+										Thread.sleep(100);
+									}
+									return null;
+								}
+								
+								protected void done(){
+									waitForTrans.setVisible(false);
+									newField.setText(String.valueOf(Bank.getInstance().getAccountList().get(currentPin).getBalance()));
+								}
+								
+							};
+							worker.execute();
 						}
 					}
 				}
@@ -96,17 +127,45 @@ public class Banking_TransDialog extends JDialog{
 		
 		btnD.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
-				String deposit = JOptionPane.showInputDialog(Banking_TransDialog.this, "Enter Deposit Amount");
+				if(oldTransaction){
+					currentField.setText(String.valueOf(Bank.getInstance().getAccountList().get(currentPin).getBalance()));
+					transField.setText(null);
+				}
+				final String deposit = JOptionPane.showInputDialog(Banking_TransDialog.this, "Enter Deposit Amount");
 				if(!deposit.matches("[0-9]*.?[0-9]+")){
 					JOptionPane.showMessageDialog(null, "Invalid input!!!");	
 				}
 				else{
-					if(Double.valueOf(deposit)>Double.valueOf(currentField.getText())){
-						JOptionPane.showMessageDialog(null, "Withdrawal amount higher than balance.");
+					if(Double.valueOf(deposit)<0){
+						JOptionPane.showMessageDialog(null, "Cannot deposit negative number.");
 					}
 					else{
 						transField.setText("+" + deposit);
-						newField.setText(String.valueOf(Double.valueOf(currentField.getText())+Double.valueOf(deposit)));
+						SwingWorker<String,Integer> worker = new SwingWorker<String,Integer>(){
+							JDialog waitForTrans;
+							protected String doInBackground() throws Exception {
+								Bank.getInstance().sendTransaction(Bank.getInstance().
+										getAccountList().get(currentPin).getAccountNumber(),deposit);
+								
+								waitForTrans = new JDialog((JFrame)null,true);
+								waitForTrans.add(new JLabel("Updating balance in system. Please Wait..."));
+								waitForTrans.setMinimumSize(new Dimension(100,100));
+								waitForTrans.setVisible(true);
+								waitForTrans.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+								
+								while(!Bank.getInstance().hasCompletedTransaction){
+									Thread.sleep(100);
+								}
+								return null;
+							}
+							
+							protected void done(){
+								waitForTrans.setVisible(false);
+								newField.setText(String.valueOf(Bank.getInstance().getAccountList().get(currentPin).getBalance()));
+							}
+							
+						};
+						worker.execute();
 					}
 				}
 			}
@@ -114,17 +173,13 @@ public class Banking_TransDialog extends JDialog{
 		
 		btnClose.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
+				currentPin = -1;
 				Banking_TransDialog.this.setVisible(false);
+				Banking_Panel.sessionOn = false;
 			}
 		});
-	}
-	
-
-	public void setCurrentField(double amount){
-		currentField.setText(String.valueOf(amount));
-	}
-	
-	public String getNewField(){
-		return newField.getText();
+		
+		this.setVisible(true);
+		
 	}
 }
