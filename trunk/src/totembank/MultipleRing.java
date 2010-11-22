@@ -75,6 +75,7 @@ public class MultipleRing {
     	}
     	Bank.getInstance().deliver(m.message);
         System.out.println("Message " + m.seqNum + " on ring " + m.ringIDs.get(0) + " delivered to application");
+        System.out.println(m.message);
     }
     
     static int GVcount = 0;
