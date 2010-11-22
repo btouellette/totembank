@@ -93,18 +93,28 @@ public class Banking_TransDialog extends JDialog{
 						else{
 							transField.setText("-" + withdraw);
 							oldTransaction = true;
-							SwingWorker<String,Integer> worker = new SwingWorker<String,Integer>(){
-								JDialog waitForTrans;
+							
+							JDialog waitForTrans = new JDialog((JFrame)null,true);
+							waitForTrans.add(new JLabel("Updating balance in system. Please Wait..."));
+							waitForTrans.setMinimumSize(new Dimension(300,100));
+							waitForTrans.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+							//waitForTrans.setVisible(true);
+							Bank.getInstance().sendTransaction(currentPin,withdraw);
+							while(!Bank.getInstance().hasCompletedTransaction){
+								//Thread.sleep(100);
+							}
+							waitForTrans.setVisible(false);
+							newField.setText(String.valueOf(Bank.getInstance().getAccountList().get(currentPin).getBalance()));
+							/*SwingWorker<String,Integer> worker = new SwingWorker<String,Integer>(){
+								
+								JDialog waitForTrans = new JDialog((JFrame)null,true);
+								
 								protected String doInBackground() throws Exception {
-									Bank.getInstance().sendTransaction(Bank.getInstance().
-											getAccountList().get(currentPin).getAccountNumber(),withdraw);
-									
-									waitForTrans = new JDialog((JFrame)null,true);
 									waitForTrans.add(new JLabel("Updating balance in system. Please Wait..."));
-									waitForTrans.setMinimumSize(new Dimension(100,100));
-									waitForTrans.setVisible(true);
+									waitForTrans.setMinimumSize(new Dimension(300,100));
 									waitForTrans.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-									
+									//waitForTrans.setVisible(true);
+									Bank.getInstance().sendTransaction(currentPin,withdraw);
 									while(!Bank.getInstance().hasCompletedTransaction){
 										Thread.sleep(100);
 									}
@@ -117,7 +127,7 @@ public class Banking_TransDialog extends JDialog{
 								}
 								
 							};
-							worker.execute();
+							worker.execute();*/
 						}
 					}
 				}
@@ -142,12 +152,10 @@ public class Banking_TransDialog extends JDialog{
 					else{
 						transField.setText("+" + deposit);
 						SwingWorker<String,Integer> worker = new SwingWorker<String,Integer>(){
-							JDialog waitForTrans;
+							JDialog waitForTrans = new JDialog((JFrame)null,true);;
 							protected String doInBackground() throws Exception {
-								Bank.getInstance().sendTransaction(Bank.getInstance().
-										getAccountList().get(currentPin).getAccountNumber(),deposit);
+								Bank.getInstance().sendTransaction(currentPin,deposit);
 								
-								waitForTrans = new JDialog((JFrame)null,true);
 								waitForTrans.add(new JLabel("Updating balance in system. Please Wait..."));
 								waitForTrans.setMinimumSize(new Dimension(100,100));
 								waitForTrans.setVisible(true);
