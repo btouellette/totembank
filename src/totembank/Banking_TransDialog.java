@@ -98,12 +98,12 @@ public class Banking_TransDialog extends JDialog{
 							waitForTrans.add(new JLabel("Updating balance in system. Please Wait..."));
 							waitForTrans.setMinimumSize(new Dimension(300,100));
 							waitForTrans.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-							waitForTrans.setVisible(true);
+							//waitForTrans.setVisible(true);
 							Bank.getInstance().sendTransaction(currentPin,"-"+withdraw);
 							while(!Bank.getInstance().hasCompletedTransaction){
 								//Thread.sleep(100);
 							}
-							waitForTrans.setVisible(false);
+							//waitForTrans.setVisible(false);
 							newField.setText(String.valueOf(Bank.getInstance().getAccountList().get(currentPin).getBalance()));
 							/*SwingWorker<String,Integer> worker = new SwingWorker<String,Integer>(){
 								
@@ -150,8 +150,28 @@ public class Banking_TransDialog extends JDialog{
 						JOptionPane.showMessageDialog(null, "Cannot deposit negative number.");
 					}
 					else{
-						transField.setText("+" + deposit);
-						SwingWorker<String,Integer> worker = new SwingWorker<String,Integer>(){
+						transField.setText(deposit);
+						oldTransaction = true;
+						
+						JDialog waitForTrans = new JDialog((JFrame)null,true);
+						waitForTrans.add(new JLabel("Updating balance in system. Please Wait..."));
+						waitForTrans.setMinimumSize(new Dimension(300,100));
+						waitForTrans.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+						Bank.getInstance().sendTransaction(currentPin,deposit);
+						//waitForTrans.setVisible(true);
+						
+						while(!Bank.getInstance().hasCompletedTransaction()){
+							/*try {
+								Thread.sleep(100);
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}*/
+						}
+						waitForTrans.setVisible(false);
+						newField.setText(String.valueOf(Bank.getInstance().getAccountList().get(currentPin).getBalance()));
+						
+						/*SwingWorker<String,Integer> worker = new SwingWorker<String,Integer>(){
 							JDialog waitForTrans = new JDialog((JFrame)null,true);;
 							protected String doInBackground() throws Exception {
 								Bank.getInstance().sendTransaction(currentPin,deposit);
@@ -173,7 +193,7 @@ public class Banking_TransDialog extends JDialog{
 							}
 							
 						};
-						worker.execute();
+						worker.execute();*/
 					}
 				}
 			}

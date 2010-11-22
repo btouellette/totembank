@@ -131,6 +131,7 @@ public class Bank {
 		hasCompletedTransaction = false;
 		String sendString = String.valueOf(accounts.get(pin).getAccountNumber())+" "+ withdraw;
 		MultipleRing.send(encrypt(sendString));
+		//MultipleRing.send(sendString);
 	}
 	
 	public void deliver(String key){
@@ -156,6 +157,13 @@ public class Bank {
 	
 	public HashMap<Integer,Account> getAccountList(){
 		return accounts;
+	}
+
+	public boolean hasCompletedTransaction() {
+		// TODO Auto-generated method stub
+		if(hasCompletedTransaction)
+			return true;
+		return hasCompletedTransaction;
 	}
 }
 
