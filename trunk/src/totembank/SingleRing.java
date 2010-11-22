@@ -191,7 +191,9 @@ public class SingleRing {
     	}
         if (m instanceof Token) {
         	MultipleRing.deliver();
-        	MultipleRing.guaranteeVector();
+        	if(Process.getInstance().getRings().size() > 1) {
+        		MultipleRing.guaranteeVector();
+        	}
             try {
 				Thread.sleep(1000);
             } catch (InterruptedException e) {
