@@ -21,6 +21,16 @@ public class MultipleRing {
 		msg.message = sendString;
 		processRings.get(ringID).getSingleRing().send(msg);
     }
+
+	static void sendGV(String sendString) {
+		HashMap<Integer, Ring> processRings = Process.getInstance().getRings();
+		for(Integer ringID : processRings.keySet()) {
+			Message msg = new Message();
+			msg.ringIDs.add(ringID);
+			msg.message = sendString;
+			processRings.get(ringID).getSingleRing().send(msg);
+		}
+    }
 	
 	// Getting a message from the single ring protocol
     static void receive(Message m) {
@@ -70,7 +80,7 @@ public class MultipleRing {
     static int GVcount = 0;
 	static void guaranteeVector() {
 		if(GVcount == 9) {
-			send("GV");
+			sendGV("GV");
 			GVcount = 0;
 		} else {
 			GVcount++;
