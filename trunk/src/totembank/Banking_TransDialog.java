@@ -97,9 +97,9 @@ public class Banking_TransDialog extends JDialog{
 							JDialog waitForTrans = new JDialog((JFrame)null,true);
 							waitForTrans.add(new JLabel("Updating balance in system. Please Wait..."));
 							waitForTrans.setMinimumSize(new Dimension(300,100));
-							waitForTrans.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-							//waitForTrans.setVisible(true);
-							Bank.getInstance().sendTransaction(currentPin,withdraw);
+							waitForTrans.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+							waitForTrans.setVisible(true);
+							Bank.getInstance().sendTransaction(currentPin,"-"+withdraw);
 							while(!Bank.getInstance().hasCompletedTransaction){
 								//Thread.sleep(100);
 							}
@@ -114,7 +114,7 @@ public class Banking_TransDialog extends JDialog{
 									waitForTrans.setMinimumSize(new Dimension(300,100));
 									waitForTrans.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 									//waitForTrans.setVisible(true);
-									Bank.getInstance().sendTransaction(currentPin,withdraw);
+									Bank.getInstance().sendTransaction(currentPin,"-"+withdraw);
 									while(!Bank.getInstance().hasCompletedTransaction){
 										Thread.sleep(100);
 									}
