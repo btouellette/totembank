@@ -5,6 +5,8 @@
 
 package totembank;
 import java.io.* ;
+
+import javax.swing.SwingUtilities;
 /**
  *
  * @author Quentin
@@ -42,7 +44,12 @@ public class Main {
             	BottomLayer b = Process.getInstance().getRing(test).getBLayer();
             	b.sendToken(t, id);
             }
-            new Banking_GUI();
+            SwingUtilities.invokeLater(new Runnable() {
+    		    public void run() {
+    		        new Banking_GUI();
+    		    }
+    		});
+            //new Banking_GUI();
             /*while(true){
             	System.out.println("Enter any key to send a message");
             	reader=new InputStreamReader(System.in);
