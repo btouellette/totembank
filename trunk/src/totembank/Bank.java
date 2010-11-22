@@ -3,7 +3,6 @@ package totembank;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,20 +28,21 @@ public class Bank {
 		initAccounts();
 		initLogin();
 		try {
-			SecretKey key = new SecretKeySpec("14835925932".getBytes(), "DES");
+			// This key must be 8 bytes
+			SecretKey key = new SecretKeySpec("14835925".getBytes(), "DES");
             ecipher = Cipher.getInstance("DES");
             dcipher = Cipher.getInstance("DES");
             ecipher.init(Cipher.ENCRYPT_MODE, key);
             dcipher.init(Cipher.DECRYPT_MODE, key);
-
         } catch (javax.crypto.NoSuchPaddingException e) {
+            e.printStackTrace();
         } catch (java.security.NoSuchAlgorithmException e) {
+            e.printStackTrace();
         } catch (java.security.InvalidKeyException e) {
+            e.printStackTrace();
         }
-		byte[] keyBytes = new byte[1024];
-		Random r = new Random(23305284);
-		r.nextBytes(keyBytes);
 	}
+	
 	public static Bank getInstance(){
 		if(instance == null){
 			instance = new Bank();
@@ -87,6 +87,7 @@ public class Bank {
 		}
 		return false;
 	}
+	
 	/*Encryption scheme */
     public String encrypt(String str) {
         try {
@@ -97,8 +98,11 @@ public class Bank {
             // Encode bytes to base64 to get a string
             return new sun.misc.BASE64Encoder().encode(enc);
         } catch (javax.crypto.BadPaddingException e) {
+            e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -112,9 +116,13 @@ public class Bank {
             // Decode using utf-8
             return new String(utf8, "UTF8");
         } catch (javax.crypto.BadPaddingException e) {
+            e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
