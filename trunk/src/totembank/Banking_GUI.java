@@ -22,7 +22,7 @@ public class Banking_GUI extends JFrame{
 			}
 			 
 		});
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().add(bpanel);
 		this.pack();
 		this.setVisible(true);
