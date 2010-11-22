@@ -1,5 +1,8 @@
 package totembank;
 
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -11,7 +14,15 @@ public class Banking_GUI extends JFrame{
 		this.setTitle("Totem Banking Application Login");
 		Bank.getInstance();		// initalize bank account information
 		Banking_Panel bpanel = new Banking_Panel();
-		
+		bpanel.addComponentListener(new ComponentAdapter(){
+			public void componentHidden(ComponentEvent e){
+				Banking_GUI.this.setVisible(false);
+			}
+			public void componentShown(ComponentEvent e){
+				Banking_GUI.this.setVisible(true);
+			}
+			 
+		});
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().add(bpanel);
 		this.pack();

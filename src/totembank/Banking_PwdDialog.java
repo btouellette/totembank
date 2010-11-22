@@ -21,7 +21,7 @@ public class Banking_PwdDialog extends JDialog{
 	private Integer currentPin = 0;
 	
 	public Banking_PwdDialog(){
-		super((JFrame)null, "Password Authentication");
+		super((JFrame)null, "Pin Authentication");
 		pwdForm = new JPasswordField(20);
 		pwdForm.setBounds(141, 34, 146, 20);
 		pwdForm.setEditable(false);
@@ -212,7 +212,15 @@ public class Banking_PwdDialog extends JDialog{
 					}
 					else{
 						currentPin = Integer.parseInt(text);
-						
+						if(!Bank.getInstance().isValidPin(currentPin)){
+							JOptionPane.showMessageDialog(null, "Pin does not match login profile!");
+							resetCurrentPin();
+						}
+						else{
+							// All authentication done. Start making transactions
+							Banking_PwdDialog.this.setVisible(false);
+							new Banking_TransDialog(currentPin);
+						}
 					}	
 				}			
 			}
@@ -230,8 +238,6 @@ public class Banking_PwdDialog extends JDialog{
 		JButton btnBack = new JButton("<------");
 		btnBack.setBounds(335, 76, 89, 51);
 		getContentPane().add(btnBack);
-		
-		
 		btnBack.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
 				String text;
@@ -245,7 +251,8 @@ public class Banking_PwdDialog extends JDialog{
 		
 		this.setModalityType(DEFAULT_MODALITY_TYPE);
 		this.setLocation(new Point(100,100));
-		this.setPreferredSize(new Dimension(600,400));
+		this.setMinimumSize(new Dimension(600,400));
+		this.setVisible(true);
 		
 	}
 	
