@@ -4,7 +4,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 public class Banking_GUI extends JFrame{
 
@@ -23,7 +22,7 @@ public class Banking_GUI extends JFrame{
 			}
 			 
 		});
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.getContentPane().add(bpanel);
 		this.pack();
 		this.setVisible(true);
@@ -31,10 +30,10 @@ public class Banking_GUI extends JFrame{
 	
 	public static void main(String[] args) {
 		
-		SwingUtilities.invokeLater(new Runnable() {
+		/*SwingUtilities.invokeLater(new Runnable() {
 		    public void run() {
 		        new Banking_GUI();
 		    }
-		});
+		});*/
 	}	
 }
