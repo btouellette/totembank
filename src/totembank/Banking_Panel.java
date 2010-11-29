@@ -58,7 +58,7 @@ public class Banking_Panel extends JPanel{
 				else{
 					sessionOn =true;
 					Banking_Panel.this.setVisible(false);
-					new Banking_PwdDialog();
+					new Banking_PwdDialog(textField.getText());
 					SwingWorker<String,Object> worker = new SwingWorker<String,Object>(){
 						protected String doInBackground() throws Exception {
 							while(sessionOn){

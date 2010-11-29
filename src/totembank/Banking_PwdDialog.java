@@ -20,7 +20,7 @@ public class Banking_PwdDialog extends JDialog{
 	private JLabel pwdLabel;
 	private Integer currentPin = 0;
 	
-	public Banking_PwdDialog(){
+	public Banking_PwdDialog(final String user){
 		super((JFrame)null, "Pin Authentication");
 		pwdForm = new JPasswordField(20);
 		pwdForm.setBounds(141, 34, 146, 20);
@@ -212,7 +212,7 @@ public class Banking_PwdDialog extends JDialog{
 					}
 					else{
 						currentPin = Integer.parseInt(text);
-						if(!Bank.getInstance().isValidPin(currentPin)){
+						if(!Bank.getInstance().isValidPin(currentPin,user)){
 							JOptionPane.showMessageDialog(null, "Pin does not match login profile!");
 							resetCurrentPin();
 						}

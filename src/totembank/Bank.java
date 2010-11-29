@@ -81,9 +81,11 @@ public class Bank {
 		return false;
 	}
 	
-	public boolean isValidPin(int pin){
-		if(accounts.containsKey(pin)){
-			return true;
+	public boolean isValidPin(int pin,String user){
+		for(Login log: users){
+			if(log.getPin()==pin && log.getUsername().equals(user)){
+				return true;
+			}
 		}
 		return false;
 	}
