@@ -27,13 +27,5 @@ public class Banking_GUI extends JFrame{
 		this.pack();
 		this.setVisible(true);
 	}
-	
-	public static void main(String[] args) {
 		
-		/*SwingUtilities.invokeLater(new Runnable() {
-		    public void run() {
-		        new Banking_GUI();
-		    }
-		});*/
-	}	
 }
