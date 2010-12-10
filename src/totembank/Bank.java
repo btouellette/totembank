@@ -161,12 +161,6 @@ public class Bank {
 		return accounts;
 	}
 
-	public boolean hasCompletedTransaction() {
-		// TODO Auto-generated method stub
-		if(hasCompletedTransaction)
-			return true;
-		return hasCompletedTransaction;
-	}
 }
 
 class Login{
