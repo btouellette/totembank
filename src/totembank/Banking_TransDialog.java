@@ -109,6 +109,12 @@ public class Banking_TransDialog extends JDialog{
 								
 								protected void done(){
 									waitForTrans.setVisible(false);
+									if(Bank.getInstance().hasTransactionFailed){
+										JOptionPane.showMessageDialog(null, "Insufficient Funds. Please try again");
+										Bank.getInstance().hasTransactionFailed = false;
+										transField.setText(null);
+										return;
+									}
 									newField.setText(String.valueOf(Bank.getInstance().getAccountList().get(currentPin).getBalance()));
 								}	
 							};

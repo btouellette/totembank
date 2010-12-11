@@ -34,12 +34,6 @@ public class Main {
             int startToken = Integer.parseInt(line);
            
             if (startToken==1){
-            	/*System.out.println("Press a key to start the Token passing");
-               	reader=new InputStreamReader(System.in);
-               	entree=new BufferedReader(reader);
-               	line=entree.readLine();
-                
-               	System.out.println("test");*/
             	Token t = new Token(test);
             	BottomLayer b = Process.getInstance().getRing(test).getBLayer();
             	b.sendToken(t, id);
@@ -49,16 +43,6 @@ public class Main {
     		        new Banking_GUI();
     		    }
     		});
-            //new Banking_GUI();
-            /*while(true){
-            	System.out.println("Enter any key to send a message");
-            	reader=new InputStreamReader(System.in);
-            	entree=new BufferedReader(reader);
-            	line=entree.readLine();
-            	Message m = new Message(test);
-            	SingleRing s = Process.getInstance().getRing(test).getSingleRing();
-            	s.send(m);
-            }*/
         }
         catch (Exception e){
             e.printStackTrace();
