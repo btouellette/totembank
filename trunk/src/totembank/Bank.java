@@ -16,8 +16,10 @@ public class Bank {
 	private static HashMap<Integer,Account> accounts;
 	private static HashSet<Login> users;	
 	private static Bank instance;
+	private static int bankID;
 	
 	public boolean hasCompletedTransaction;
+	public boolean hasTransactionFailed = false;
 	
     Cipher ecipher;
     Cipher dcipher;
@@ -25,6 +27,7 @@ public class Bank {
 	private Bank(){
 		accounts = new HashMap<Integer,Account>();
 		users = new HashSet<Login>();
+		bankID = (int) Math.round(Math.random()*100 + Math.random()*100); 
 		initAccounts();
 		initLogin();
 		try {
@@ -131,23 +134,34 @@ public class Bank {
     
 	public void sendTransaction(int pin, String withdraw){
 		hasCompletedTransaction = false;
-		String sendString = String.valueOf(accounts.get(pin).getAccountNumber())+" "+ withdraw;
+		String sendString = String.valueOf(bankID) + " " +
+			String.valueOf(accounts.get(pin).getAccountNumber())+" "+ withdraw;
 		MultipleRing.send(encrypt(sendString));
-		//MultipleRing.send(sendString);
 	}
 	
 	public void deliver(String key){
 		String message = decrypt(key);
-		Pattern p = Pattern.compile("([0-9]*) (-?[0-9]*.?[0-9]+)");
+		Pattern p = Pattern.compile("([0-9]*) ([0-9]*) (-?[0-9]*.?[0-9]+)");
 		Matcher m = p.matcher(message);
 		if(m.matches()){
-			int acntNum = Integer.valueOf(m.group(1));
-			double amount = Double.valueOf(m.group(2));
+			int id = Integer.valueOf(m.group(1));
+			int acntNum = Integer.valueOf(m.group(2));
+			double amount = Double.valueOf(m.group(3));
 			
 			for(Account a: accounts.values()){
 				if(a.getAccountNumber()==acntNum){
-					a.setBalance(a.getBalance()+amount);
-					hasCompletedTransaction = true;
+					if((a.getBalance() < Math.abs(amount)) && amount < 0){
+						if(id==bankID){
+							hasTransactionFailed = true;
+						}
+						
+					}
+					else{
+						a.setBalance(a.getBalance()+amount);
+					}
+					if(id==bankID){
+						hasCompletedTransaction = true;
+					}
 					break;
 				}
 			}
