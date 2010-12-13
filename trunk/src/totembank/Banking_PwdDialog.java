@@ -242,7 +242,7 @@ public class Banking_PwdDialog extends JDialog{
 			public void mouseClicked(MouseEvent e){
 				String text;
 				text = String.valueOf(Banking_PwdDialog.this.pwdForm.getPassword());
-				if(text!=null){
+				if(text!=null && text.length() != 0){
 					Banking_PwdDialog.this.pwdForm.setText(text.substring(0, text.length()-1));
 				}
 			}
