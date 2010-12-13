@@ -65,7 +65,34 @@ public class BottomLayer extends Thread {
             return node;
         }
     }
-
+    
+    /** Determine the next node which has to receive the token ack. Nodes are placed sorted in the ring in numerical order.
+    @param id id of the process executing the method
+    @return Return the next node for passing the token ack. If there the process is the only node, it returns the process*/
+    Node prevToken(int id) {
+        int max = Integer.MIN_VALUE;
+        Node nodemax = Process.getInstance();
+        int prev = Integer.MIN_VALUE;
+        Node node = Process.getInstance();
+        for (Node n : nodes) {                   //Determine max id node in the list and the max id superior to this process id
+            if (n.id < id && n.id > prev) {
+                prev = n.id;
+                node = n;
+            }
+            if (n.id > max) {
+                max = n.id;
+                nodemax = n;
+            }
+        }
+        if (prev == Integer.MIN_VALUE) { // If there is no id superior, the previous node has the max id
+        	System.out.println("Returning prev token: " + nodemax.id);
+            return nodemax;
+        } else {
+        	System.out.println("Returning prev token: " + node.id);
+            return node;
+        }
+    }
+    
     /** Add a node to the list of nodes of the ring
     @param n Node to be added*/
     void addNode(Node n) {
@@ -82,6 +109,27 @@ public class BottomLayer extends Thread {
             ObjectOutputStream out = new ObjectOutputStream(buffer);
             t.setTimeStamp();
             out.writeObject(t);
+            out.close();
+            buffer.close();
+            DatagramPacket packet = new DatagramPacket(buffer.toByteArray(), buffer.size(), n.getIp(), n.getPort());
+            socket.send(packet);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+    
+    /** Pass the token to the following node after define it
+    @param m Token handled by this Node
+    @param idprocess Id of the node executing the method (sender, not receiver)*/
+    void sendTokenAck(int idprocess) {
+    	Message m = new Message(ring);
+    	m.message = "ACK TOKEN";
+        Node n = prevToken(idprocess);
+        try {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(buffer);
+            out.writeObject(m);
             out.close();
             buffer.close();
             DatagramPacket packet = new DatagramPacket(buffer.toByteArray(), buffer.size(), n.getIp(), n.getPort());

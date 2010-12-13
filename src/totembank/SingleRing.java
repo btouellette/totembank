@@ -33,6 +33,8 @@ public class SingleRing {
     Token oldtoken =null;
     /** Maximum number of messages to be sent when the node has the token*/
     int MaxMessagestoSend = 20;
+    /** Timer used for checking token acknowledgment */
+    Timer timer;
 
     /**Constructor. Set ring id and process id and creates empty lists
     @param ring Ring ID
@@ -154,8 +156,21 @@ public class SingleRing {
     /** Deliver message to the upper layer
     @param m Message to be delivered*/
     private void deliver(Message m) { //TO DO here is just test implementation
-    	MultipleRing.receive(m);
-        System.out.println("Message " + m.seqNum + " on ring " + ring + " delivered to multiring");
+    	// When delivering a configuration change message remove the bad node from the bottom layer node list
+    	if(m.message.startsWith("CC")) {
+    		System.out.println("Removing bad node");
+    		String[] items = m.message.split(" ");
+    		int badID = Integer.parseInt(items[1]);
+    		Set<Node> nodes = Process.getInstance().getRing(ring).getBLayer().nodes;
+    		for(Node n : nodes) {
+    			if(n.id == badID) {
+    				nodes.remove(n);
+    			}
+    		}
+    	} else {
+	    	MultipleRing.receive(m);
+	        System.out.println("Message " + m.seqNum + " on ring " + ring + " delivered to multiring");
+    	}
     }
 
     /** Check if a message has already been received
@@ -190,6 +205,7 @@ public class SingleRing {
     		Process.getInstance().increaseTimeOffset(m.tStamp - currentTime + 1);
     	}
         if (m instanceof Token) {
+            Process.getInstance().getRing(ring).getBLayer().sendTokenAck(processid);
         	MultipleRing.deliver();
         	if(Process.getInstance().getRings().size() > 1) {
         		MultipleRing.guaranteeVector();
@@ -219,6 +235,18 @@ public class SingleRing {
             oldtoken = token;
             Process.getInstance().getRing(ring).getBLayer().sendToken(token, processid);
             token = null;
+            // Schedule a check to see if we got the ack in a few seconds
+            if(timer != null) {
+            	timer.cancel();
+            }
+            timer = new Timer();
+            System.out.println("Sent token, awaiting ACK");
+            timer.schedule(new TimerTask(){ public void run() { configurationChange(); } }, 2000);
+        } else if(m.message.equals("ACK TOKEN")) {
+        	System.out.println("Got ACK");
+        	if(timer != null) {
+                timer.cancel();
+        	}
         } else {
             if (processid == 2 && count <= 0) {
                 count++;
@@ -233,4 +261,20 @@ public class SingleRing {
             }
         }
     }
+
+    /** Triggered a configuration change, remove the next item from the configuration */
+	protected void configurationChange() {
+		System.out.println("Sending CC");
+		Message m = new Message();
+		m.message = "CC " + Process.getInstance().getRing(ring).getBLayer().nextToken(processid).id;
+		sendCC(m);
+	}
+
+	private void sendCC(Message m) {
+		send(m);
+		send();
+		deliver();
+        oldtoken.setTimeStamp();
+        Process.getInstance().getRing(ring).getBLayer().sendToken(oldtoken, processid);
+	}
 }
