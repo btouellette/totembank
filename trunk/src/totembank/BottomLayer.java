@@ -112,6 +112,8 @@ public class BottomLayer extends Thread {
             out.close();
             buffer.close();
             DatagramPacket packet = new DatagramPacket(buffer.toByteArray(), buffer.size(), n.getIp(), n.getPort());
+            SingleRing s = Process.getInstance().getRing(ring).getSingleRing();
+            s.nbmessagesreceived = s.nbmessagesreceived + buffer.size();
             socket.send(packet);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -133,6 +135,8 @@ public class BottomLayer extends Thread {
             out.close();
             buffer.close();
             DatagramPacket packet = new DatagramPacket(buffer.toByteArray(), buffer.size(), n.getIp(), n.getPort());
+            SingleRing s = Process.getInstance().getRing(ring).getSingleRing();
+            s.nbmessagesreceived = s.nbmessagesreceived + buffer.size();
             socket.send(packet);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -152,6 +156,16 @@ public class BottomLayer extends Thread {
                 out.close();
                 buffer.close();
                 DatagramPacket packet = new DatagramPacket(buffer.toByteArray(), buffer.size(), n.getIp(), n.getPort());
+                SingleRing s = Process.getInstance().getRing(ring).getSingleRing();
+                if ((m.message.equals("GV")) ){
+                    s.nbmessagesreceived = s.nbmessagesreceived + buffer.size();
+                }
+                else
+                    s.nbmessagesreceived = s.nbmessagesreceived + buffer.size();
+                    s.nbmessagesreceivedtrue = s.nbmessagesreceivedtrue + buffer.size();
+                {
+
+                }
                 socket.send(packet);
             } catch (IOException ex) {
                 ex.printStackTrace();
