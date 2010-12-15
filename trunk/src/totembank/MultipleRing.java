@@ -7,7 +7,10 @@ import java.util.List;
 import totembank.Process.Ring;
 
 public class MultipleRing {
+	// List of messages received stored by source ring
 	private static HashMap<Integer, List<Message>> receivedMessages = new HashMap<Integer, List<Message>>();
+	// The highest timestamp delivered on each ring to the application
+	// Used to prevent multiple paths in the topology from causing multiple deliveries
 	private static HashMap<Integer, Long> mostRecentTimestamp = new HashMap<Integer, Long>();
 
 	static void addRingID(Integer ringID){
@@ -64,10 +67,10 @@ public class MultipleRing {
     		}
     	}
     	// No list is empty so deliver earliest and unqueue it
-    	// Ensure that it isn't a replicated message
+    	// Ensure that it isn't a replicated message before delivery
+    	receivedMessages.get(earliestRing).remove(earliest);
     	if(mostRecentTimestamp.get(earliestRing) == null |
     	   mostRecentTimestamp.get(earliestRing) < earliest.tStamp) {
-	    	receivedMessages.get(earliestRing).remove(earliest);
 	    	mostRecentTimestamp.put(earliestRing, earliest.tStamp);
 	    	deliver(earliest);
     	}
