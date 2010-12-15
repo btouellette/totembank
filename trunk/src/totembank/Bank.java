@@ -182,8 +182,18 @@ public class Bank {
 	
 	public void sendRandomMessage(double count,long startTime,final long endTime){
 		
-		if(System.currentTimeMillis()> endTime)
+		if(System.currentTimeMillis()> endTime) {
+			Timer timer = new Timer();
+			timer.schedule(new TimerTask(){ 
+				public void run(){
+					for(Integer i : Bank.getInstance().getAccountList().keySet()) {
+		        		System.out.print(Bank.getInstance().getAccountList().get(i).getUserName() + ": ");
+		        		System.out.println(Bank.getInstance().getAccountList().get(i).getBalance());
+		        	} 
+				} 
+			}, 30000);
 			return;
+		}
 		testCount = Math.pow(-1, count);
 		final double AMT;
 		Random gen = new Random();
