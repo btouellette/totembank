@@ -215,11 +215,11 @@ public class SingleRing {
             if (Process.getInstance().getRings().size() > 1) {
                 MultipleRing.guaranteeVector();
             }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             token = (Token) m;
             ArrayList<RetranReq> ret = token.getRetranList();
             clearReq(ret);
@@ -237,11 +237,11 @@ public class SingleRing {
 
 
 
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             token.setTimeStamp();
             oldtoken = token;
             Process.getInstance().getRing(ring).getBLayer().sendToken(token, processid);
