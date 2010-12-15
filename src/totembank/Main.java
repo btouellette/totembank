@@ -43,6 +43,13 @@ public class Main {
     		        new Banking_GUI();
     		    }
     		});
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                	for(Integer i : Bank.getInstance().getAccountList().keySet()) {
+                		System.out.println(Bank.getInstance().getAccountList().get(i));
+                	}
+                }
+            });
         }
         catch (Exception e){
             e.printStackTrace();
