@@ -3,6 +3,8 @@ package totembank;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,12 +20,13 @@ public class Bank {
 	private static Bank instance;
 	private static int bankID;
 	
+	private double testCount;
 	public boolean hasCompletedTransaction;
 	public boolean hasTransactionFailed = false;
 	
     Cipher ecipher;
     Cipher dcipher;
-	
+
 	private Bank(){
 		accounts = new HashMap<Integer,Account>();
 		users = new HashSet<Login>();
@@ -173,6 +176,23 @@ public class Bank {
 	
 	public HashMap<Integer,Account> getAccountList(){
 		return accounts;
+	}
+	
+	
+	public void sendRandomMessage(double count,long startTime,final long endTime){
+		
+		if(System.currentTimeMillis()> endTime)
+			return;
+		testCount = Math.pow(-1, count);
+		final double AMT = 200;
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask(){ 
+			public void run(){
+				sendTransaction(3333,String.valueOf(AMT*testCount));
+				long currentTime = System.currentTimeMillis();
+				sendRandomMessage(testCount,currentTime,endTime); 
+			} 
+		}, 100);
 	}
 
 }
