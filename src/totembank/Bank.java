@@ -3,6 +3,7 @@ package totembank;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
@@ -184,11 +185,22 @@ public class Bank {
 		if(System.currentTimeMillis()> endTime)
 			return;
 		testCount = Math.pow(-1, count);
-		final double AMT = 200;
+		final double AMT;
+		Random gen = new Random();
+		if(gen.nextBoolean()) {
+			int rand = gen.nextInt(10);
+			if(rand > 3) { 
+				AMT = -3000;
+			} else {
+				AMT = 3000;
+			}
+		} else {
+			 AMT = 200*testCount;
+		}
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask(){ 
 			public void run(){
-				sendTransaction(3333,String.valueOf(AMT*testCount));
+				sendTransaction(3333,String.valueOf(AMT));
 				long currentTime = System.currentTimeMillis();
 				sendRandomMessage(testCount,currentTime,endTime); 
 			} 
