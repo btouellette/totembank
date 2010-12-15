@@ -46,7 +46,8 @@ public class Main {
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public void run() {
                 	for(Integer i : Bank.getInstance().getAccountList().keySet()) {
-                		System.out.println(Bank.getInstance().getAccountList().get(i));
+                		System.out.print(Bank.getInstance().getAccountList().get(i).getUserName() + ": ");
+                		System.out.println(Bank.getInstance().getAccountList().get(i).getBalance());
                 	}
                 }
             });
