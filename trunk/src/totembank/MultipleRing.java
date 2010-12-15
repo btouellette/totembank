@@ -8,6 +8,7 @@ import totembank.Process.Ring;
 
 public class MultipleRing {
 	private static HashMap<Integer, List<Message>> receivedMessages = new HashMap<Integer, List<Message>>();
+	private static HashMap<Integer, Long> mostRecentTimestamp = new HashMap<Integer, Long>();
 
 	static void addRingID(Integer ringID){
 		receivedMessages.put(ringID, new ArrayList<Message>());
@@ -63,8 +64,13 @@ public class MultipleRing {
     		}
     	}
     	// No list is empty so deliver earliest and unqueue it
-    	receivedMessages.get(earliestRing).remove(earliest);
-    	deliver(earliest);
+    	// Ensure that it isn't a replicated message
+    	if(mostRecentTimestamp.get(earliestRing) == null |
+    	   mostRecentTimestamp.get(earliestRing) < earliest.tStamp) {
+	    	receivedMessages.get(earliestRing).remove(earliest);
+	    	mostRecentTimestamp.put(earliestRing, earliest.tStamp);
+	    	deliver(earliest);
+    	}
     }
 
     // Send the message to the application
