@@ -67,7 +67,7 @@ public class MultipleRing {
     	// No list is empty so deliver earliest and unqueue it
     	// Ensure that it isn't a replicated message before delivery
     	receivedMessages.get(earliestRing).remove(earliest);
-    	if(mostRecentTimestamp.get(earliestRing) == null |
+    	if(mostRecentTimestamp.get(earliestRing) == null ||
     	   mostRecentTimestamp.get(earliestRing) < earliest.tStamp) {
 	    	mostRecentTimestamp.put(earliestRing, earliest.tStamp);
 	    	deliver(earliest);
