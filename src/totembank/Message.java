@@ -23,13 +23,6 @@ public class Message implements Serializable, Cloneable {
     public Message() {
         tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
     }
-
-    /** Constructor
-    @param ring id of the origin ring*/
-    public Message(int ring) {
-        ringIDs.add(ring);
-        tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
-    }
     
     protected Message clone() {
     	Message copy = new Message();

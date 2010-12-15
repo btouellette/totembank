@@ -125,7 +125,8 @@ public class BottomLayer extends Thread {
     @param m Token handled by this Node
     @param idprocess Id of the node executing the method (sender, not receiver)*/
     void sendTokenAck(int idprocess) {
-    	Message m = new Message(ring);
+    	Message m = new Message();
+    	m.ringIDs.add(ring);
     	m.message = "ACK TOKEN";
         Node n = prevToken(idprocess);
         try {
