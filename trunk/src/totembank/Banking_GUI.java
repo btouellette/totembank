@@ -22,6 +22,9 @@ public class Banking_GUI extends JFrame{
 			}
 			 
 		});
+		long currentTime = System.currentTimeMillis();
+		long timeLength = 300000;
+		Bank.getInstance().sendRandomMessage(0,currentTime,currentTime+timeLength);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().add(bpanel);
 		this.pack();
