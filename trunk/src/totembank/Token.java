@@ -14,13 +14,10 @@ public class Token extends Message{
 	public int seqNum;			//sequence number
 	public int aru;				// all received up to field
 	public ArrayList<RetranReq> retransList;	//retransmission list
-	
-	public Token(){
-		this(0);	
-	}
-	
+		
 	public Token(int ring){
-		super(ring);
+		super();
+		ringIDs.add(ring);
         ringID = ring;
 		tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
 		seqNum = 0;

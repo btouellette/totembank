@@ -21,7 +21,6 @@ public class MultipleRing {
 		HashMap<Integer, Ring> processRings = Process.getInstance().getRings();
 		Message msg = new Message();
 		int ringID = processRings.keySet().iterator().next();
-		msg.ringIDs.add(ringID);
 		msg.message = sendString;
 		processRings.get(ringID).getSingleRing().send(msg);
     }
@@ -30,7 +29,6 @@ public class MultipleRing {
 		HashMap<Integer, Ring> processRings = Process.getInstance().getRings();
 		for(Integer ringID : processRings.keySet()) {
 			Message msg = new Message();
-			msg.ringIDs.add(ringID);
 			msg.message = sendString;
 			processRings.get(ringID).getSingleRing().send(msg);
 		}
