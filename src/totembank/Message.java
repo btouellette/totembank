@@ -19,6 +19,7 @@ public class Message implements Serializable, Cloneable {
     /** Timestamp*/
     long tStamp;
     String message;
+    int oriSeqNum = -1;
     
     public Message() {
         tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();

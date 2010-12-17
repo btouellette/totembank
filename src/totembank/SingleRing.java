@@ -43,9 +43,9 @@ public class SingleRing {
     @param ring Ring ID
     @param id Process Id*/
     public SingleRing(int ring, int id) {
-        queuedMessages = new ArrayList<Message>();
-        receivedMessages = new ArrayList<Message>();
-        notDeliveredMessages = new ArrayList<Message>();
+        queuedMessages = new Vector<Message>();
+        receivedMessages = new Vector<Message>();
+        notDeliveredMessages = new Vector<Message>();
         this.ring = ring;
         processid = id;
 
@@ -59,7 +59,7 @@ public class SingleRing {
     		m.ringIDs.add(ring);
     	}
         queuedMessages.add(m);
-        System.out.println("Message queued");
+        //System.out.println("Message queued");
     }
 
     /** Send all messages queued. Call when the process handles the token*/
@@ -70,7 +70,10 @@ public class SingleRing {
             for (Message m : queuedMessages) {
                 token.incSeqNum();
                 m.seqNum = token.getSeqNum();
-                m.tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
+                if (m.oriSeqNum==-1){
+                    m.oriSeqNum = m.seqNum;
+                    m.tStamp = System.currentTimeMillis() + Process.getInstance().timeOffset();
+                }               
                 Process.getInstance().getRing(ring).getBLayer().send(m);
                 temp.add(m);
                 sendcount++;
@@ -90,7 +93,7 @@ public class SingleRing {
             for (Message m : receivedMessages) {
                 if (m.seqNum == r.seqNum) {
                     Process.getInstance().getRing(ring).getBLayer().send(m);
-                    System.out.println("Retransmission of " + m.seqNum);
+                    //System.out.println("Retransmission of " + m.seqNum);
                 }
             }
         }
@@ -103,7 +106,7 @@ public class SingleRing {
         while (i <= token.getSeqNum()) {
             req = new RetranReq(processid, i);
             token.addReq(req);
-            System.out.println("Request Retransmission of message " + i);
+            //System.out.println("Request Retransmission of message " + i);
             maxRequired = i;
             i++;
         }
@@ -118,7 +121,7 @@ public class SingleRing {
                 for (Message m : receivedMessages) {
                     if (m.seqNum == r.seqNum) {
                         list.add(r);
-                        System.out.println("Retransmission request of message " + m.seqNum + " removed");
+                        //System.out.println("Retransmission request of message " + m.seqNum + " removed");
                     }
                 }
             }
@@ -163,7 +166,7 @@ public class SingleRing {
     private void deliver(Message m) { //TO DO here is just test implementation
         // When delivering a configuration change message remove the bad node from the bottom layer node list
         if (m.message.startsWith("CC")) {
-            System.out.println("Removing bad node");
+            //System.out.println("Removing bad node");
             String[] items = m.message.split(" ");
             int badID = Integer.parseInt(items[1]);
             Set<Node> nodes = Process.getInstance().getRing(ring).getBLayer().nodes;
@@ -174,7 +177,7 @@ public class SingleRing {
             }
         } else {
             MultipleRing.receive(m);
-            System.out.println("Message " + m.seqNum + " on ring " + ring + " delivered to multiring");
+            //System.out.println("Message " + m.seqNum + " on ring " + ring + " delivered to multiring");
         }
     }
 
@@ -254,7 +257,7 @@ public class SingleRing {
                 timer.cancel();
             }
             timer = new Timer();
-            System.out.println("Sent token, awaiting ACK");
+            //System.out.println("Sent token, awaiting ACK");
             timer.schedule(new TimerTask() {
 
                 public void run() {
@@ -262,7 +265,7 @@ public class SingleRing {
                 }
             }, 2000);
         } else if (m.message.equals("ACK TOKEN")) {
-            System.out.println("Got ACK");
+            //System.out.println("Got ACK");
             if (timer != null) {
                 timer.cancel();
             }
@@ -272,7 +275,7 @@ public class SingleRing {
                 count++;
             } // Creates artificial losses for testing. Set the processid chosen and the count value upper to 0 to create a loss
             else if (!isReceived(m)) {
-                System.out.println("Message " + m.seqNum + " received");
+               // System.out.println("Message " + m.seqNum + " received");
                 receivedMessages.add(m);
                 notDeliveredMessages.add(m);
                 if (m.seqNum == maxReceived + 1) {
@@ -303,10 +306,10 @@ public class SingleRing {
 
         //on met try si jamais il y a une exception
         try {
-            System.out.println("printstats");
+           // System.out.println("printstats");
             File f = new File(fileaddress);
-            f.delete();
-            FileWriter fw = new FileWriter(fileaddress, true);
+            //f.delete();
+            FileWriter fw = new FileWriter(fileaddress);
             BufferedWriter output = new BufferedWriter(fw);
 
 

@@ -186,12 +186,13 @@ public class Bank {
 			Timer timer = new Timer();
 			timer.schedule(new TimerTask(){ 
 				public void run(){
-					for(Integer i : Bank.getInstance().getAccountList().keySet()) {
-		        		System.out.print(Bank.getInstance().getAccountList().get(i).getUserName() + ": ");
-		        		System.out.println(Bank.getInstance().getAccountList().get(i).getBalance());
+                                    System.out.println("Start send at "+ System.currentTimeMillis());
+                                    for(Integer i : Bank.getInstance().getAccountList().keySet()) {
+		        		//System.out.print(Bank.getInstance().getAccountList().get(i).getUserName() + ": ");
+		        		//System.out.println(Bank.getInstance().getAccountList().get(i).getBalance());
 		        	} 
 				} 
-			}, 30000);
+			}, 50000);
 			return;
 		}
 		testCount = Math.pow(-1, count);
@@ -214,7 +215,7 @@ public class Bank {
 				long currentTime = System.currentTimeMillis();
 				sendRandomMessage(testCount,currentTime,endTime); 
 			} 
-		}, 100);
+		}, Math.round(Math.random()*1000));
 	}
 
 }
