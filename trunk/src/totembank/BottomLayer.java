@@ -85,10 +85,10 @@ public class BottomLayer extends Thread {
             }
         }
         if (prev == Integer.MIN_VALUE) { // If there is no id superior, the previous node has the max id
-        	System.out.println("Returning prev token: " + nodemax.id);
+        	//System.out.println("Returning prev token: " + nodemax.id);
             return nodemax;
         } else {
-        	System.out.println("Returning prev token: " + node.id);
+        	//System.out.println("Returning prev token: " + node.id);
             return node;
         }
     }

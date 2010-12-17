@@ -1,17 +1,17 @@
 package totembank;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import totembank.Process.Ring;
 
 public class MultipleRing {
 	// List of messages received stored by source ring
-	private static HashMap<Integer, List<Message>> receivedMessages = new HashMap<Integer, List<Message>>();
+	private static ConcurrentHashMap<Integer, List<Message>> receivedMessages = new ConcurrentHashMap<Integer, List<Message>>();
 	// The highest timestamp delivered on each ring to the application
 	// Used to prevent multiple paths in the topology from causing multiple deliveries
-	private static HashMap<Integer, Long> mostRecentTimestamp = new HashMap<Integer, Long>();
+	private static ConcurrentHashMap<Integer, Long> mostRecentTimestamp = new ConcurrentHashMap<Integer, Long>();
 
 	static void addRingID(Integer ringID){
 		receivedMessages.put(ringID, new ArrayList<Message>());
@@ -23,6 +23,7 @@ public class MultipleRing {
 		int ringID = processRings.keySet().iterator().next();
 		msg.message = sendString;
 		processRings.get(ringID).getSingleRing().send(msg);
+
     }
 
 	static void sendGV(String sendString) {
@@ -40,7 +41,10 @@ public class MultipleRing {
     	HashMap<Integer, Ring> processRings = Process.getInstance().getRings();
     	for(Integer ringID : processRings.keySet()) {
     		if(!m.ringIDs.contains(ringID)) {
-    			processRings.get(ringID).getSingleRing().send(m.clone());
+                        Message m2 = m.clone();
+                        m2.oriSeqNum = m.seqNum;
+    			processRings.get(ringID).getSingleRing().send(m2);
+
     		}
     	}
     	// Add it to the proper list in receivedMessages
@@ -77,12 +81,14 @@ public class MultipleRing {
     // Send the message to the application
     static void deliver(Message m) {
     	if(m.message.equals("GV")) {
-    		System.out.println("GV " + m.seqNum + " on ring " + m.ringIDs.get(0) + " delivered to application");
+    		//System.out.println("GV " + m.seqNum + " on ring " + m.ringIDs.get(0) + " delivered to application");
     	    return;
     	}
+        else{
     	Bank.getInstance().deliver(m.message);
-        System.out.println("Message " + m.seqNum + " on ring " + m.ringIDs.get(0) + " delivered to application");
-        System.out.println(m.message);
+        System.out.println("Message " + m.oriSeqNum + " on ring " + m.ringIDs.get(0) + " delivered to application");
+        //System.out.println(m.message);
+        }
     }
     
     static int GVcount = 0;
